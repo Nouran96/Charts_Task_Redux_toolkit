@@ -1,0 +1,35 @@
+.drawer {
+  width: 50px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.drawerPaper {
+  width: inherit;
+  overflow-x: hidden;
+}
+
+.drawer .listItem {
+  justify-content: center;
+  padding: 8px 0.2rem;
+}
+
+.drawer .listItemIcon {
+  min-width: 24px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.activeLink .listItem {
+  background-color: #3535a9;
+}
+
+.activeLink .listItemIcon {
+  color: white;
+}
+
+.logo {
+  max-width: 40px;
+  height: auto;
+}
