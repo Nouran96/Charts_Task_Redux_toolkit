@@ -1,14 +1,12 @@
 import React from "react";
-import { Box } from "@mui/material";
-import SideDrawer from "./components/SideDrawer";
 import MainRoutes from "./routes";
+import MainLayout from "./components/MainLayout";
 
 function App() {
   return (
-    <Box display="flex" columnGap={3}>
-      <SideDrawer />
+    <MainLayout>
       <MainRoutes />
-    </Box>
+    </MainLayout>
   );
 }
 

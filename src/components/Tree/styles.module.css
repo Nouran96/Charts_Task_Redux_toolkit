@@ -1,0 +1,9 @@
+.treeView {
+  max-width: 100%;
+  min-height: auto;
+  overflow-y: auto;
+}
+
+.treeItemContent {
+  padding: 0 !important;
+}
