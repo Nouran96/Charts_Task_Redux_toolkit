@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { CircularProgress, Typography } from "@mui/material";
-import TreeItem, {
-  TreeItemProps,
-  useTreeItem,
-  TreeItemContentProps,
-} from "@mui/lab/TreeItem";
+import TreeItem, { useTreeItem } from "@mui/lab/TreeItem";
+import { Box } from "@mui/system";
 import { useLazyQuery } from "@apollo/client";
 import { GET_COUNTRIES, GET_CITIES } from "../../utils/Queries";
-import { Box } from "@mui/system";
-
-type CustomProps = {
-  typename?: string;
-  appendNewData?: (nodeId: string, data: []) => void;
-};
-type CustomTreeItemProps = TreeItemProps & CustomProps;
-
-type CustomTreeItemContentProps = TreeItemContentProps & CustomProps;
+import {
+  CustomTreeItemContentProps,
+  LazyQuery,
+  CustomTreeItemProps,
+} from "../../types/CustomTreeItem";
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: CustomTreeItemContentProps,
@@ -34,60 +27,61 @@ const CustomContent = React.forwardRef(function CustomContent(
     displayIcon,
   } = props;
 
-  const [
-    getCountries,
-    { loading: countriesLoading, error, data: allCountries },
-  ] = useLazyQuery(GET_COUNTRIES, { variables: { continentId: nodeId } });
+  // Extract last part from Typename key of node from graphql
+  // Ex: Continentscountriescities_Country => Country
+  const type: string = typename?.split("_")[1] || "";
 
-  const [getCities, { loading: citiesLoading, data: allCities }] = useLazyQuery(
-    GET_CITIES,
+  let lazyQueryParams: LazyQuery = {} as LazyQuery;
+
+  // Add lazyQueryParams according to type of node
+  switch (type) {
+    case "Continent":
+      lazyQueryParams = {
+        query: GET_COUNTRIES,
+        variableName: "continentId",
+      };
+      break;
+    case "Country":
+      lazyQueryParams = {
+        query: GET_CITIES,
+        variableName: "countryId",
+      };
+      break;
+    default:
+      lazyQueryParams = {
+        query: GET_COUNTRIES,
+        variableName: "continentId",
+      };
+      break;
+  }
+
+  // Lazy query for getting children of this node
+  const [getChildren, { loading, data }] = useLazyQuery(
+    lazyQueryParams?.query,
     {
-      variables: { countryId: nodeId },
+      variables: { [lazyQueryParams?.variableName]: nodeId },
     }
   );
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const type: string = typename?.split("_")[1] || "";
 
   const { disabled, expanded, selected, focused, handleExpansion } =
     useTreeItem(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
 
+  // Append new children to node
   useEffect(() => {
-    if (countriesLoading || citiesLoading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
+    if (data?.data?.results && appendNewData) {
+      appendNewData(nodeId, data.data?.results || []);
     }
-  }, [countriesLoading, citiesLoading]);
-
-  useEffect(() => {
-    if (allCountries?.data?.results && appendNewData) {
-      appendNewData(nodeId, allCountries.data?.results || []);
-    }
-  }, [allCountries]);
-
-  useEffect(() => {
-    if (allCities?.data?.results && appendNewData) {
-      appendNewData(nodeId, allCities.data?.results || []);
-    }
-  }, [allCities]);
+  }, [data]);
 
   const handleExpansionClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    switch (type) {
-      case "Continent":
-        getCountries();
-        break;
-      case "Country":
-        getCities();
-        break;
-      default:
-        break;
+    if (!data) {
+      getChildren();
     }
+
     handleExpansion(event);
   };
 
@@ -110,7 +104,7 @@ const CustomContent = React.forwardRef(function CustomContent(
           {label}
         </Typography>
 
-        {isLoading && <CircularProgress />}
+        {loading && <CircularProgress />}
       </Box>
     </div>
   );
