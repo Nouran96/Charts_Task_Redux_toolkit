@@ -18,17 +18,62 @@ const Tree = () => {
     }
   }, [allContinents]);
 
+  const getObject = (theObject: any, nodeId: string, data: any): any | null => {
+    // theObject = treeItemsData
+    var result = null;
+    const theObjectCopy = JSON.parse(JSON.stringify(theObject));
+
+    // console.log(theObjectCopy);
+
+    if (theObject instanceof Array) {
+      for (var i = 0; i < theObjectCopy.length; i++) {
+        result = getObject(theObjectCopy[i], nodeId, data); // .node
+        if (result) {
+          theObjectCopy[i] = result;
+          // break;
+        }
+      }
+    } else {
+      for (var prop in theObjectCopy) {
+        if (prop === "objectId") {
+          if (theObjectCopy[prop] === nodeId) {
+            theObjectCopy.children = data;
+            return theObjectCopy;
+          }
+        }
+        if (
+          theObjectCopy[prop] instanceof Object ||
+          theObjectCopy[prop] instanceof Array
+        ) {
+          result = getObject(theObjectCopy[prop], nodeId, data);
+          if (result) {
+            theObjectCopy[prop] = result;
+            break;
+          }
+        }
+      }
+    }
+
+    return theObjectCopy;
+  };
+
   const appendNewData = (nodeId: string, data: []) => {
     const treeItemsDataClone: any[] = JSON.parse(JSON.stringify(treeItemsData));
 
-    const nodeIndex = treeItemsDataClone.findIndex(
-      (item: any) => item.node.objectId === nodeId
-    );
+    const result = getObject(treeItemsDataClone, nodeId, data);
 
-    if (nodeIndex >= 0) {
-      treeItemsDataClone[nodeIndex].node.children = data;
-      setTreeItemsData(treeItemsDataClone);
-    }
+    setTreeItemsData(result);
+
+    // console.log(result);
+
+    // const nodeIndex = treeItemsDataClone.findIndex(
+    //   (item: any) => item.node.objectId === nodeId
+    // );
+
+    // if (nodeIndex >= 0) {
+    //   treeItemsDataClone[nodeIndex].node.children = data;
+    //   setTreeItemsData(treeItemsDataClone);
+    // }
   };
 
   const renderChildren = (node: any) => {
