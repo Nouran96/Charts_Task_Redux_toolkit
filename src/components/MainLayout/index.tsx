@@ -30,7 +30,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           </Toolbar>
         </AppBar> */}
 
-        <Box m={2}>{children}</Box>
+        <Box minHeight="100vh">{children}</Box>
       </Box>
     </Box>
   );

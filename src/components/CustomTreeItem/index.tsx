@@ -10,6 +10,7 @@ import {
   LazyQuery,
   CustomTreeItemProps,
 } from "../../types/CustomTreeItem";
+import styles from "./styles.module.css";
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: CustomTreeItemContentProps,
@@ -100,11 +101,18 @@ const CustomContent = React.forwardRef(function CustomContent(
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div className={classes.iconContainer}>{icon}</div>
       <Box display="flex" justifyContent="center" gap={3}>
-        <Typography component="div" className={classes.label}>
+        <Typography
+          component="div"
+          className={clsx(classes.label, { [styles.expandedState]: expanded })}
+        >
           {label}
         </Typography>
 
-        {loading && <CircularProgress />}
+        {loading && (
+          <Box>
+            <CircularProgress size={15} />
+          </Box>
+        )}
       </Box>
     </div>
   );

@@ -8,6 +8,7 @@ import { GET_CONTINENTS } from "../../utils/Queries";
 import CustomTreeItem from "../CustomTreeItem";
 import styles from "./styles.module.css";
 import { getModifiedData } from "../../utils/Shared";
+import { Box } from "@mui/system";
 
 const Tree = () => {
   // Get all continents on first render
@@ -55,14 +56,19 @@ const Tree = () => {
   };
 
   // Show a loader until query resolve
-  if (loading) return <CircularProgress />;
+  if (loading)
+    return (
+      <Box display="flex" justifyContent="center" paddingTop={10}>
+        <CircularProgress />
+      </Box>
+    );
   else if (allContinents)
     return (
       <TreeView
         classes={{ root: styles.treeView }}
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
-        sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: "auto" }}
+        sx={{ height: "100%", flexGrow: 1, overflowY: "auto" }}
       >
         {treeItemsData.map((continent: any) => {
           return renderChild(continent.node);

@@ -1,3 +1,7 @@
+# TreeView rendering with Charts
+
+This task has a tree view that renders recursively according to number of levels provided from the server. It also features Charts from Apex charts library.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
