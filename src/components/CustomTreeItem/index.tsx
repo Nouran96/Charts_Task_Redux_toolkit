@@ -65,14 +65,20 @@ const CustomContent = React.forwardRef(function CustomContent(
     }
   );
 
-  const { disabled, expanded, selected, focused, handleExpansion } =
-    useTreeItem(nodeId);
+  const {
+    disabled,
+    expanded,
+    selected,
+    focused,
+    handleExpansion,
+    handleSelection,
+  } = useTreeItem(nodeId);
 
   const icon = iconProp || expansionIcon || displayIcon;
 
   // Append new children to node
   useEffect(() => {
-    if (data?.data?.results && appendNewData) {
+    if (data?.data?.results && data.data.results.length > 0 && appendNewData) {
       appendNewData(nodeId, data.data?.results || []);
     }
   }, [data]);
@@ -80,10 +86,11 @@ const CustomContent = React.forwardRef(function CustomContent(
   const handleExpansionClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (!data) {
+    if (!data && type !== "City") {
       getChildren();
     }
 
+    handleSelection(event);
     handleExpansion(event);
   };
 

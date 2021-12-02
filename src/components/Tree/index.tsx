@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 import { getModifiedData } from "../../utils/Shared";
 import { Box } from "@mui/system";
 import { useAppDispatch } from "../../types/Redux";
-import { addSelectedNodes } from "../../store/actions/Tree";
+import * as types from "../../store/actionTypes";
 
 const Tree = () => {
   // Get all continents on first render
@@ -27,9 +27,9 @@ const Tree = () => {
     }
   }, [allContinents]);
 
-  useEffect(() => {
-    dispatch(addSelectedNodes(expanded));
-  }, [expanded]);
+  // useEffect(() => {
+  //   dispatch({ type: types.ADD_SELECTED_NODES, payload: expanded });
+  // }, [expanded]);
 
   const handleToggle = (
     event: SyntheticEvent<Element, Event>,
@@ -43,6 +43,12 @@ const Tree = () => {
       collapseAllInTheSameLevelAndDeeper(nodeIds);
     } else {
       setExpanded(nodeIds);
+    }
+  };
+
+  const handleSelect = (event: React.SyntheticEvent, nodeId: string) => {
+    if (nodeId) {
+      dispatch({ type: types.ADD_SELECTED_NODES, payload: nodeId });
     }
   };
 
@@ -71,6 +77,7 @@ const Tree = () => {
         classes={{ content: styles.treeItemContent }}
         typename={node.__typename}
         appendNewData={appendNewData}
+        // Add a level starting from 1 and above to know whick level we are in
         nodeId={`${level}_${node.objectId}`}
         label={node.name}
       >
@@ -104,6 +111,7 @@ const Tree = () => {
         sx={{ height: "100%", flexGrow: 1, overflowY: "auto" }}
         expanded={expanded}
         onNodeToggle={handleToggle}
+        onNodeSelect={handleSelect}
       >
         {treeItemsData.map((continent: any) => {
           return renderChild(continent.node);

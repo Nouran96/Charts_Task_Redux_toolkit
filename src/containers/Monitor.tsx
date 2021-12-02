@@ -4,10 +4,14 @@ import { Box, Typography } from "@mui/material";
 import ApexCharts from "apexcharts";
 import Tree from "../components/Tree";
 import CustomAppBar from "../components/CustomAppBar";
+import NodeDetails from "../components/NodeDetails";
+import { useAppSelector } from "../types/Redux";
 
 const Monitor = () => {
   const { pathname } = useLocation();
   const [title, setTitle] = useState("");
+
+  const { selectedNode } = useAppSelector((state) => state.tree);
 
   useEffect(() => {
     const title = pathname.split("/").join("");
@@ -40,6 +44,8 @@ const Monitor = () => {
 
       <Box flexGrow="1" borderRight={1} sx={{ backgroundColor: "#eee" }}>
         <CustomAppBar title={title} />
+
+        <NodeDetails />
       </Box>
 
       <Box width={300} paddingY={1}>

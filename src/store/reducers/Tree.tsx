@@ -1,20 +1,21 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import * as types from "../actionTypes";
 
 type TreeReducerState = {
-  selectedNodes: Array<string>;
+  selectedNode: string;
 };
 
 const INITIAL_STATE: TreeReducerState = {
-  selectedNodes: [],
+  selectedNode: "",
 };
 
 export default function treeReducer(
   state = INITIAL_STATE,
-  action: PayloadAction<{ type: string; payload: any }>
+  action: PayloadAction<string>
 ) {
   switch (action.type) {
-    case "ADD_SELECTED_NODES":
-      return { ...state, selectedNodes: action.payload };
+    case types.ADD_SELECTED_NODES:
+      return { ...state, selectedNode: action.payload };
     default:
       return state;
   }
