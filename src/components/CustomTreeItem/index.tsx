@@ -11,6 +11,7 @@ import {
   CustomTreeItemProps,
 } from "../../types/CustomTreeItem";
 import styles from "./styles.module.css";
+import { getNodeId } from "../../utils/Shared";
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: CustomTreeItemContentProps,
@@ -60,7 +61,7 @@ const CustomContent = React.forwardRef(function CustomContent(
   const [getChildren, { loading, data }] = useLazyQuery(
     lazyQueryParams?.query,
     {
-      variables: { [lazyQueryParams?.variableName]: nodeId },
+      variables: { [lazyQueryParams?.variableName]: getNodeId(nodeId) },
     }
   );
 

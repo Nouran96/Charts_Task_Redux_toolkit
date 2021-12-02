@@ -25,7 +25,7 @@ export const getModifiedData = (
   } else {
     for (let prop in originalDataCopy) {
       if (prop === "objectId") {
-        if (originalDataCopy[prop] === nodeId) {
+        if (originalDataCopy[prop] === getNodeId(nodeId)) {
           originalDataCopy.children = dataToBeAdded;
           return originalDataCopy;
         }
@@ -45,4 +45,8 @@ export const getModifiedData = (
   }
 
   return originalDataCopy;
+};
+
+export const getNodeId = (customNodeId: string): string => {
+  return customNodeId.split("_")[1];
 };

@@ -1,5 +1,5 @@
 .toolbar {
-  min-height: 48px;
+  min-height: 30px !important;
   background-color: white;
   color: rgba(0, 0, 0, 0.7);
 }
