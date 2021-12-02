@@ -9,6 +9,8 @@ import CustomTreeItem from "../CustomTreeItem";
 import styles from "./styles.module.css";
 import { getModifiedData } from "../../utils/Shared";
 import { Box } from "@mui/system";
+import { useAppDispatch } from "../../types/Redux";
+import { addSelectedNodes } from "../../store/actions/Tree";
 
 const Tree = () => {
   // Get all continents on first render
@@ -16,6 +18,18 @@ const Tree = () => {
   // Data to render all tree items from
   const [treeItemsData, setTreeItemsData] = useState([]);
   const [expanded, setExpanded] = useState<Array<string>>([]);
+  const dispatch = useAppDispatch();
+
+  // Set treeItemsData with continents recieved
+  useEffect(() => {
+    if (allContinents?.data?.results) {
+      setTreeItemsData(allContinents?.data?.results);
+    }
+  }, [allContinents]);
+
+  useEffect(() => {
+    dispatch(addSelectedNodes(expanded));
+  }, [expanded]);
 
   const handleToggle = (
     event: SyntheticEvent<Element, Event>,
@@ -39,13 +53,6 @@ const Tree = () => {
       )
     );
   };
-
-  // Set treeItemsData with continents recieved
-  useEffect(() => {
-    if (allContinents?.data?.results) {
-      setTreeItemsData(allContinents?.data?.results);
-    }
-  }, [allContinents]);
 
   // Add new data in its correct place in treeItemsData array
   const appendNewData = (nodeId: string, data: []) => {

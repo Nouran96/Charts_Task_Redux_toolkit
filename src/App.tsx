@@ -1,12 +1,15 @@
-import React from "react";
 import MainRoutes from "./routes";
 import MainLayout from "./components/MainLayout";
+import { Provider } from "react-redux";
+import store from "./store";
 
 function App() {
   return (
-    <MainLayout>
-      <MainRoutes />
-    </MainLayout>
+    <Provider store={store}>
+      <MainLayout>
+        <MainRoutes />
+      </MainLayout>
+    </Provider>
   );
 }
 

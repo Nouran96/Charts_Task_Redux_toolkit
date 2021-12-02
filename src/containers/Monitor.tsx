@@ -42,7 +42,7 @@ const Monitor = () => {
         <CustomAppBar title={title} />
       </Box>
 
-      <Box width={250} paddingY={1}>
+      <Box width={300} paddingY={1}>
         Hii
       </Box>
     </Box>
