@@ -59,9 +59,6 @@ export const GET_COUNTRY = gql`
       name
       capital
       currency
-      native
-      emoji
-      emojiU
     }
   }
 `;

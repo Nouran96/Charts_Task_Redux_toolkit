@@ -8,7 +8,7 @@ import { getNodeId } from "../../utils/Shared";
 
 const NodeDetails = () => {
   const { selectedNode } = useAppSelector((state) => state.tree);
-  const [details, setDetails] = useState<{ data?: {} }>({});
+  const [details, setDetails] = useState<{ data?: any }>({});
 
   const [getCountry, { data: countryDetails, loading: countryLoading }] =
     useLazyQuery(GET_COUNTRY);
@@ -47,11 +47,58 @@ const NodeDetails = () => {
   }, [selectedNode]);
 
   const renderProps = () => {
-    if (details && details.data) console.log(Object.entries(details?.data));
+    const nodeType = details?.data?.__typename?.split("_")[1];
+
+    if (nodeType === "Country") {
+      return (
+        <Box display="flex" flexDirection="column">
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Name: </Typography>
+            <Typography>{details.data.name}</Typography>
+          </Box>
+
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Capital: </Typography>
+            <Typography>{details.data.capital}</Typography>
+          </Box>
+
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Currency: </Typography>
+            <Typography>{details.data.currency}</Typography>
+          </Box>
+        </Box>
+      );
+    } else if (nodeType === "City") {
+      return (
+        <Box display="flex" flexDirection="column">
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Name: </Typography>
+            <Typography>{details.data.name}</Typography>
+          </Box>
+
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Population: </Typography>
+            <Typography>{details.data.population}</Typography>
+          </Box>
+
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Latitude: </Typography>
+            <Typography>{details.data.location.latitude}</Typography>
+          </Box>
+
+          <Box display="flex" gap={1} alignItems="baseline">
+            <Typography variant="subtitle2">Longitude: </Typography>
+            <Typography>{details.data.location.longitude}</Typography>
+          </Box>
+        </Box>
+      );
+    }
+
+    return null;
   };
 
   return (
-    <Box>
+    <Box p={1}>
       {Object.keys(details).length > 0 ? (
         <>{renderProps()}</>
       ) : cityLoading || countryLoading ? (

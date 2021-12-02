@@ -5,13 +5,11 @@ import ApexCharts from "apexcharts";
 import Tree from "../components/Tree";
 import CustomAppBar from "../components/CustomAppBar";
 import NodeDetails from "../components/NodeDetails";
-import { useAppSelector } from "../types/Redux";
+import styles from "./styles.module.css";
 
 const Monitor = () => {
   const { pathname } = useLocation();
   const [title, setTitle] = useState("");
-
-  const { selectedNode } = useAppSelector((state) => state.tree);
 
   useEffect(() => {
     const title = pathname.split("/").join("");
@@ -19,14 +17,8 @@ const Monitor = () => {
   }, [pathname]);
 
   return (
-    <Box display="flex" flexWrap="wrap" minHeight="inherit">
-      <Box
-        sx={{ overflowY: "auto" }}
-        width={250}
-        borderRight={1}
-        paddingY={1}
-        maxHeight="100vh"
-      >
+    <Box className={styles.monitorContainer}>
+      <Box className={styles.firstColumnContainer}>
         <Typography
           sx={{ color: "#3535a9", textTransform: "uppercase" }}
           borderBottom="1px solid black"
@@ -42,15 +34,13 @@ const Monitor = () => {
         </Box>
       </Box>
 
-      <Box flexGrow="1" borderRight={1} sx={{ backgroundColor: "#eee" }}>
+      <Box className={styles.secondColumnContainer}>
         <CustomAppBar title={title} />
 
         <NodeDetails />
       </Box>
 
-      <Box width={300} paddingY={1}>
-        Hii
-      </Box>
+      <Box className={styles.thirdColumnContainer}>Hii</Box>
     </Box>
   );
 };
