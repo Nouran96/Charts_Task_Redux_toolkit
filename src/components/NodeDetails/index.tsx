@@ -5,6 +5,7 @@ import { useAppSelector } from "../../types/Redux";
 import { GET_CITY, GET_COUNTRY } from "../../utils/Queries";
 import { useLazyQuery } from "@apollo/client";
 import { getNodeId } from "../../utils/Shared";
+import CurrentWeather from "../CurrentWeather";
 
 const NodeDetails = () => {
   const { selectedNode } = useAppSelector((state) => state.tree);
@@ -52,30 +53,24 @@ const NodeDetails = () => {
     if (nodeType === "Country") {
       return (
         <Box display="flex" flexDirection="column">
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Name: </Typography>
-            <Typography>{details.data.name}</Typography>
-          </Box>
+          {details.data.capital && (
+            <Box display="flex" gap={1} alignItems="baseline">
+              <Typography variant="subtitle2">Capital: </Typography>
+              <Typography>{details.data.capital}</Typography>
+            </Box>
+          )}
 
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Capital: </Typography>
-            <Typography>{details.data.capital}</Typography>
-          </Box>
-
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Currency: </Typography>
-            <Typography>{details.data.currency}</Typography>
-          </Box>
+          {details.data.currency && (
+            <Box display="flex" gap={1} alignItems="baseline">
+              <Typography variant="subtitle2">Currency: </Typography>
+              <Typography>{details.data.currency}</Typography>
+            </Box>
+          )}
         </Box>
       );
     } else if (nodeType === "City") {
       return (
         <Box display="flex" flexDirection="column">
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Name: </Typography>
-            <Typography>{details.data.name}</Typography>
-          </Box>
-
           <Box display="flex" gap={1} alignItems="baseline">
             <Typography variant="subtitle2">Population: </Typography>
             <Typography>{details.data.population}</Typography>
@@ -100,7 +95,16 @@ const NodeDetails = () => {
   return (
     <Box p={1}>
       {Object.keys(details).length > 0 ? (
-        <>{renderProps()}</>
+        <Box display="flex" flexDirection="column">
+          <Typography variant="h5" mb={2} textAlign="center">
+            {details.data?.name}
+          </Typography>
+          <CurrentWeather
+            name={details.data.name}
+            location={details.data.location}
+          />
+          <Box>{renderProps()}</Box>
+        </Box>
       ) : cityLoading || countryLoading ? (
         <Box display="flex" justifyContent="center" pt={10}>
           <CircularProgress />
