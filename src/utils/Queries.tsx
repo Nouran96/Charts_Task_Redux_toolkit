@@ -41,12 +41,14 @@ export const GET_CITIES = gql`
   query allCities($countryId: ID) {
     data: continentscountriescities_Cities(
       where: { country: { have: { objectId: { equalTo: $countryId } } } }
+      order: [population_DESC]
     ) {
       count
       results: edges {
         node {
           objectId
           name
+          population
         }
       }
     }

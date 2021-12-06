@@ -12,6 +12,8 @@ import {
 } from "../../types/CustomTreeItem";
 import styles from "./styles.module.css";
 import { getNodeId } from "../../utils/Shared";
+import { useAppDispatch } from "../../types/Redux";
+import { ADD_HIGHEST_POPULATED_CITIES } from "../../store/actionTypes";
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: CustomTreeItemContentProps,
@@ -28,6 +30,8 @@ const CustomContent = React.forwardRef(function CustomContent(
     expansionIcon,
     displayIcon,
   } = props;
+
+  const dispatch = useAppDispatch();
 
   // Extract last part from Typename key of node from graphql
   // Ex: Continentscountriescities_Country => Country
@@ -80,6 +84,14 @@ const CustomContent = React.forwardRef(function CustomContent(
   useEffect(() => {
     if (data?.data?.results && data.data.results.length > 0 && appendNewData) {
       appendNewData(nodeId, data.data?.results || []);
+
+      // Add first 10 highest populated cities for scatter chart
+      if (type === "Country") {
+        dispatch({
+          type: ADD_HIGHEST_POPULATED_CITIES,
+          payload: data.data.results.slice(0, 10),
+        });
+      }
     }
   }, [data]);
 

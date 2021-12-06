@@ -101,12 +101,7 @@ const NodeDetails = () => {
           <Typography variant="h5" mb={2} textAlign="center">
             {details.data?.name}
           </Typography>
-          <CurrentWeather
-            // name={details.data.name}
-            // location={details.data.location}
-            // code={details.data.code}
-            data={details.data}
-          />
+          <CurrentWeather data={details.data} />
           <Box>{renderProps()}</Box>
         </Box>
       ) : cityLoading || countryLoading ? (
