@@ -5,9 +5,11 @@ import { useAppDispatch } from "../../types/Redux";
 import * as types from "../../store/actionTypes";
 
 type CurrentWeatherProps = {
-  name: string;
-  code?: string;
-  location?: { latitude: number; longitude: number };
+  data: {
+    name: string;
+    code?: string;
+    location?: { latitude: number; longitude: number };
+  };
 };
 
 type CurrentWeatherResponse = {
@@ -25,7 +27,7 @@ type CurrentWeatherResponse = {
   dt: number;
 };
 
-const CurrentWeather = ({ name, code, location }: CurrentWeatherProps) => {
+const CurrentWeather = ({ data }: CurrentWeatherProps) => {
   const [weather, setWeather] = React.useState<{
     data: null | CurrentWeatherResponse;
     error: null | boolean;
@@ -34,6 +36,7 @@ const CurrentWeather = ({ name, code, location }: CurrentWeatherProps) => {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
+    setWeather({ data: null, error: null });
     getCurrentWeather();
 
     return () => {
@@ -42,30 +45,30 @@ const CurrentWeather = ({ name, code, location }: CurrentWeatherProps) => {
         payload: { dt: null, coord: null },
       });
     };
-  }, []);
+  }, [data]);
 
   const getCurrentWeather = async () => {
-    if (name) {
+    if (data) {
       try {
         // Get weather by coordinates if present or by name
         const response = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?${
-            location
-              ? `lat=${location.latitude}&lon=${location.longitude}`
-              : `q=${name},${code?.toLowerCase()}`
+            data?.location
+              ? `lat=${data?.location.latitude}&lon=${data?.location.longitude}`
+              : `q=${data?.name},${data?.code?.toLowerCase()}`
           }&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`
         );
 
-        const data = await response.json();
+        const fetchedData = await response.json();
 
-        if (data.cod !== 200) {
+        if (fetchedData.cod !== 200) {
           // Error happened
           setWeather({ data: null, error: true });
         } else {
-          setWeather({ data, error: null });
+          setWeather({ data: fetchedData, error: null });
           dispatch({
             type: types.ADD_WEATHER_PARAMS,
-            payload: { dt: data.dt, coord: data.coord },
+            payload: { dt: fetchedData.dt, coord: fetchedData.coord },
           });
         }
       } catch (err: any) {

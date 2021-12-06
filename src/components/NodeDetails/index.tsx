@@ -32,7 +32,9 @@ const NodeDetails = () => {
 
   useEffect(() => {
     if (selectedNode) {
-      setDetails({});
+      if (selectedNode.slice(0, 1) === "1") {
+        setDetails({});
+      }
 
       switch (selectedNode.slice(0, 1)) {
         case "2":
@@ -100,9 +102,10 @@ const NodeDetails = () => {
             {details.data?.name}
           </Typography>
           <CurrentWeather
-            name={details.data.name}
-            location={details.data.location}
-            code={details.data.code}
+            // name={details.data.name}
+            // location={details.data.location}
+            // code={details.data.code}
+            data={details.data}
           />
           <Box>{renderProps()}</Box>
         </Box>
