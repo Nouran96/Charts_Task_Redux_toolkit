@@ -10,9 +10,8 @@ const CustomAppBar = ({ title }: CustomAppBarProps) => {
     <AppBar position="static" elevation={0}>
       <Toolbar classes={{ root: styles.toolbar }} variant="dense">
         <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1, fontSize: "1rem" }}
+          sx={{ color: "#3535a9", textTransform: "uppercase" }}
+          variant="subtitle2"
         >
           {title || "Home"}
         </Typography>

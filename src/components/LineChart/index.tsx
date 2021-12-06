@@ -38,15 +38,21 @@ const LineChart = ({ data }: LineChartProps) => {
               show: false,
             },
           },
-          dataLabels: {
+          tooltip: {
             enabled: false,
           },
+          dataLabels: {
+            enabled: true,
+          },
           stroke: {
-            curve: "straight",
+            curve: "smooth",
           },
           title: {
             text: "History",
             align: "left",
+          },
+          subtitle: {
+            text: "Weather data for last 24, 12 & 6 hours",
           },
           grid: {
             row: {
@@ -59,6 +65,7 @@ const LineChart = ({ data }: LineChartProps) => {
               formatter: function (value) {
                 return roundNumberToTwoDecimalPlaces(value) + "°";
               },
+              align: "center",
             },
           },
           xaxis: {
@@ -68,6 +75,9 @@ const LineChart = ({ data }: LineChartProps) => {
             ]),
             labels: {
               rotate: 0,
+            },
+            axisTicks: {
+              show: false,
             },
           },
         },

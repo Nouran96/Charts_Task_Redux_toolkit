@@ -111,7 +111,7 @@ const NodeDetails = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <Typography>Select a country or a city</Typography>
+        <Typography textAlign="center">Select a country or a city</Typography>
       )}
     </Box>
   );

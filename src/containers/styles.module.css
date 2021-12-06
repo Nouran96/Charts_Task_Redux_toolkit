@@ -12,18 +12,30 @@
 }
 
 .secondColumnContainer {
-  flex-grow: 1;
   min-width: 400px;
+  flex-grow: 1;
   border-right: 1px solid black;
   background: #eee;
 }
 
 .thirdColumnContainer {
   width: 300px;
-  padding: 8px 0;
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1001px) {
+  .thirdColumnContainer {
+    /* width: 100%; */
+    /* width: 100%; */
+    flex-grow: 1;
+    order: 1;
+  }
+
+  .secondColumnContainer {
+    order: 2;
+    width: 100%;
+    flex-grow: initial;
+  }
+
   .monitorContainer {
     flex-wrap: wrap;
   }

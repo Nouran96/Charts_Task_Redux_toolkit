@@ -1,0 +1,16 @@
+.accordion {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid black;
+}
+
+.expandedAccordion {
+  border-bottom: none !important;
+}
+.accordionSummary {
+  min-height: 29.5px !important;
+}
+
+.accordionSummaryContent {
+  margin: 0 !important;
+}

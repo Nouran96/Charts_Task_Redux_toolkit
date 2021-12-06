@@ -10,6 +10,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LineChart from "../LineChart";
 import { useAppSelector } from "../../types/Redux";
 import moment from "moment";
+import styles from "./styles.module.css";
+import { Box } from "@mui/system";
 
 type HistoryWeatherResponse = {
   hourly: Array<{
@@ -119,19 +121,36 @@ const TempChart = () => {
 
   return (
     <div>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Temperature</Typography>
+      <Accordion
+        classes={{ root: styles.accordion, expanded: styles.expandedAccordion }}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          classes={{
+            root: styles.accordionSummary,
+            content: styles.accordionSummaryContent,
+          }}
+        >
+          <Typography
+            sx={{ color: "#3535a9", textTransform: "uppercase" }}
+            variant="subtitle2"
+          >
+            Temperature
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           {history.loading ? (
-            <CircularProgress />
+            <Box display="flex" justifyContent="center" mt={10}>
+              <CircularProgress />
+            </Box>
           ) : history.error ? (
-            <Typography>Error fetching weather history</Typography>
+            <Typography textAlign="center">
+              Error fetching weather history
+            </Typography>
           ) : lineChartData ? (
             <LineChart data={lineChartData} />
           ) : (
-            <Typography>No weather history found</Typography>
+            <Typography textAlign="center">No weather history found</Typography>
           )}
         </AccordionDetails>
       </Accordion>

@@ -35,6 +35,13 @@ const CurrentWeather = ({ name, code, location }: CurrentWeatherProps) => {
 
   React.useEffect(() => {
     getCurrentWeather();
+
+    return () => {
+      dispatch({
+        type: types.ADD_WEATHER_PARAMS,
+        payload: { dt: null, coord: null },
+      });
+    };
   }, []);
 
   const getCurrentWeather = async () => {

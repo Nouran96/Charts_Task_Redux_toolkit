@@ -27,9 +27,11 @@ const Tree = () => {
     }
   }, [allContinents]);
 
-  // useEffect(() => {
-  //   dispatch({ type: types.ADD_SELECTED_NODES, payload: expanded });
-  // }, [expanded]);
+  useEffect(() => {
+    return () => {
+      dispatch({ type: types.ADD_SELECTED_NODES, payload: "" });
+    };
+  }, []);
 
   const handleToggle = (
     event: SyntheticEvent<Element, Event>,
