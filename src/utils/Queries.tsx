@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_CONTINENTS = gql`
   query allContinents {
-    data: continentscountriescities_Continents {
+    data: continentscountriescities_Continents(order: [name_ASC]) {
       count
       results: edges {
         node {
@@ -21,6 +21,7 @@ export const GET_COUNTRIES = gql`
   query allCountries($continentId: ID) {
     data: continentscountriescities_Countries(
       where: { continent: { have: { objectId: { equalTo: $continentId } } } }
+      order: [name_ASC]
     ) {
       count
       results: edges {
@@ -57,6 +58,7 @@ export const GET_COUNTRY = gql`
     data: continentscountriescities_Country(id: $countryId) {
       objectId
       name
+      code
       capital
       currency
     }

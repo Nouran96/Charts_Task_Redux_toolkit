@@ -102,6 +102,7 @@ const NodeDetails = () => {
           <CurrentWeather
             name={details.data.name}
             location={details.data.location}
+            code={details.data.code}
           />
           <Box>{renderProps()}</Box>
         </Box>

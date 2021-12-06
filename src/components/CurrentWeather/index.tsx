@@ -1,9 +1,12 @@
 import { CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
+import { useAppDispatch } from "../../types/Redux";
+import * as types from "../../store/actionTypes";
 
 type CurrentWeatherProps = {
   name: string;
+  code?: string;
   location?: { latitude: number; longitude: number };
 };
 
@@ -15,13 +18,20 @@ type CurrentWeatherResponse = {
     feels_like: number;
   };
   weather: Array<{ icon: string; description: string }>;
+  coord: {
+    lon: number;
+    lat: number;
+  };
+  dt: number;
 };
 
-const CurrentWeather = ({ name, location }: CurrentWeatherProps) => {
+const CurrentWeather = ({ name, code, location }: CurrentWeatherProps) => {
   const [weather, setWeather] = React.useState<{
     data: null | CurrentWeatherResponse;
     error: null | boolean;
   }>({ data: null, error: null });
+
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     getCurrentWeather();
@@ -35,7 +45,7 @@ const CurrentWeather = ({ name, location }: CurrentWeatherProps) => {
           `https://api.openweathermap.org/data/2.5/weather?${
             location
               ? `lat=${location.latitude}&lon=${location.longitude}`
-              : `q=${name}`
+              : `q=${name},${code?.toLowerCase()}`
           }&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`
         );
 
@@ -46,6 +56,10 @@ const CurrentWeather = ({ name, location }: CurrentWeatherProps) => {
           setWeather({ data: null, error: true });
         } else {
           setWeather({ data, error: null });
+          dispatch({
+            type: types.ADD_WEATHER_PARAMS,
+            payload: { dt: data.dt, coord: data.coord },
+          });
         }
       } catch (err: any) {
         console.error(err.response.message);

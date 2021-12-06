@@ -6,6 +6,7 @@ import Tree from "../components/Tree";
 import CustomAppBar from "../components/CustomAppBar";
 import NodeDetails from "../components/NodeDetails";
 import styles from "./styles.module.css";
+import TempChart from "../components/TempChart";
 
 const Monitor = () => {
   const { pathname } = useLocation();
@@ -40,7 +41,9 @@ const Monitor = () => {
         <NodeDetails />
       </Box>
 
-      <Box className={styles.thirdColumnContainer}>Hii</Box>
+      <Box className={styles.thirdColumnContainer}>
+        <TempChart />
+      </Box>
     </Box>
   );
 };
