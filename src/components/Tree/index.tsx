@@ -78,8 +78,12 @@ const Tree = () => {
       (id) => id.startsWith(nodeIds[0].slice(0, 1)) && id !== nodeIds[0]
     );
 
+    // Close all nodes if another one is opened in the same level
     if (nodeIds.length > 1 && foundOpenedNodeInTheSameLevel) {
       collapseAllInTheSameLevelAndDeeper(nodeIds);
+      // If upper node is collapsed, collapse all inner nodes
+    } else if (nodeIds.length === 1 && nodeIds[0].slice(0, 1) !== "1") {
+      setExpanded([]);
     } else {
       setExpanded(nodeIds);
     }
