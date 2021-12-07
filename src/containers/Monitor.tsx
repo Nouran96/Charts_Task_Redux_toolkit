@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
-import { Box, Typography } from "@mui/material";
-import ApexCharts from "apexcharts";
+import { Box, CardHeader, Card, Typography, CardContent } from "@mui/material";
 import Tree from "../components/Tree";
 import CustomAppBar from "../components/CustomAppBar";
 import NodeDetails from "../components/NodeDetails";
@@ -20,15 +19,18 @@ const Monitor = () => {
   return (
     <Box className={styles.monitorContainer}>
       <Box className={styles.firstColumnContainer}>
-        <Typography
-          sx={{ color: "#3535a9", textTransform: "uppercase" }}
-          borderBottom="1px solid black"
-          px={2}
-          gutterBottom
-          variant="subtitle2"
-        >
-          The World
-        </Typography>
+        <Card sx={{ padding: 0, marginBottom: 1 }}>
+          <CardContent sx={{ padding: 0, paddingBottom: "0 !important" }}>
+            <Typography
+              sx={{ color: "#3535a9", textTransform: "uppercase" }}
+              px={2}
+              py={1}
+              variant="subtitle2"
+            >
+              The World
+            </Typography>
+          </CardContent>
+        </Card>
 
         <Box px={2}>
           <Tree />

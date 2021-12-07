@@ -11,6 +11,7 @@ export type LazyQuery = {
 type CustomProps = {
   typename?: string;
   appendNewData?: (nodeId: string, data: []) => void;
+  removeCollapsedChildren?: (nodeId: string) => void;
 };
 
 export type CustomTreeItemProps = TreeItemProps & CustomProps;

@@ -9,7 +9,7 @@
 export const getModifiedData = (
   originalData: any,
   nodeId: string,
-  dataToBeAdded: any
+  dataToBeAdded: any = []
 ) => {
   let result = null;
   const originalDataCopy = JSON.parse(JSON.stringify(originalData)); // Deep copy
@@ -26,7 +26,13 @@ export const getModifiedData = (
     for (let prop in originalDataCopy) {
       if (prop === "objectId") {
         if (originalDataCopy[prop] === getNodeId(nodeId)) {
-          originalDataCopy.children = dataToBeAdded;
+          if (originalDataCopy.children instanceof Array) {
+            originalDataCopy.children = {
+              count: originalDataCopy.children.length,
+            };
+          } else {
+            originalDataCopy.children = dataToBeAdded;
+          }
           return originalDataCopy;
         }
       }

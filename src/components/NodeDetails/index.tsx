@@ -13,12 +13,17 @@ const NodeDetails = () => {
     (state) => state.tree
   );
   const [details, setDetails] = useState<{ data?: any }>({});
+  const [previousNodeId, setPreviousNodeId] = useState(null);
 
-  const [getCountry, { data: countryDetails, loading: countryLoading }] =
-    useLazyQuery(GET_COUNTRY);
+  const [
+    getCountry,
+    { data: countryDetails, loading: countryLoading, refetch: countryRefetch },
+  ] = useLazyQuery(GET_COUNTRY);
 
-  const [getCity, { data: cityDetails, loading: cityLoading }] =
-    useLazyQuery(GET_CITY);
+  const [
+    getCity,
+    { data: cityDetails, loading: cityLoading, refetch: cityRefetch },
+  ] = useLazyQuery(GET_CITY);
 
   // Set details array with either the country or city details
   useEffect(() => {
@@ -34,20 +39,34 @@ const NodeDetails = () => {
   }, [cityDetails]);
 
   useEffect(() => {
-    if (selectedNode.id) {
-      if (selectedNode.id.slice(0, 1) === "1") {
-        setDetails({});
-      }
+    setDetails({});
 
-      switch (selectedNode.id.slice(0, 1)) {
-        case "2":
-          getCountry({ variables: { countryId: getNodeId(selectedNode.id) } });
-          break;
-        case "3":
-          getCity({ variables: { cityId: getNodeId(selectedNode.id) } });
-          break;
-        default:
-          break;
+    if (selectedNode.id) {
+      if (previousNodeId !== selectedNode.id) {
+        setPreviousNodeId(selectedNode.id);
+
+        switch (selectedNode.id.slice(0, 1)) {
+          case "2":
+            getCountry({
+              variables: { countryId: getNodeId(selectedNode.id) },
+            });
+
+            countryRefetch({
+              variables: { countryId: getNodeId(selectedNode.id) },
+            }).then((response) => {
+              if (response?.data) {
+                setDetails(response.data);
+              }
+            });
+            break;
+          case "3":
+            getCity({ variables: { cityId: getNodeId(selectedNode.id) } });
+            break;
+          default:
+            break;
+        }
+      } else {
+        setPreviousNodeId(null);
       }
     }
   }, [selectedNode]);

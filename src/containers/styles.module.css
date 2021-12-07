@@ -7,7 +7,7 @@
   width: 250px;
   overflow-y: auto;
   border-right: 1px solid black;
-  padding: 8px 0;
+  /* padding: 8px 0; */
   max-height: 100vh;
 }
 
@@ -19,13 +19,11 @@
 }
 
 .thirdColumnContainer {
-  width: 300px;
+  width: 350px;
 }
 
 @media screen and (max-width: 1001px) {
   .thirdColumnContainer {
-    /* width: 100%; */
-    /* width: 100%; */
     flex-grow: 1;
     order: 1;
   }

@@ -1,4 +1,4 @@
-import { Typography, AppBar, Toolbar } from "@mui/material";
+import { Typography, AppBar, Toolbar, Card, CardContent } from "@mui/material";
 import styles from "./styles.module.css";
 
 type CustomAppBarProps = {
@@ -7,16 +7,21 @@ type CustomAppBarProps = {
 
 const CustomAppBar = ({ title }: CustomAppBarProps) => {
   return (
-    <AppBar position="static" elevation={0}>
-      <Toolbar classes={{ root: styles.toolbar }} variant="dense">
-        <Typography
-          sx={{ color: "#3535a9", textTransform: "uppercase" }}
-          variant="subtitle2"
-        >
-          {title || "Home"}
-        </Typography>
-      </Toolbar>
-    </AppBar>
+    <Card sx={{ padding: 0, marginBottom: 1 }}>
+      <CardContent sx={{ padding: 0, paddingBottom: "0 !important" }}>
+        <AppBar position="static" elevation={0}>
+          <Toolbar classes={{ root: styles.toolbar }} variant="dense">
+            <Typography
+              sx={{ color: "#3535a9", textTransform: "uppercase" }}
+              variant="subtitle2"
+              py={1}
+            >
+              {title || "Home"}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </CardContent>
+    </Card>
   );
 };
 

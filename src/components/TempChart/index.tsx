@@ -5,6 +5,8 @@ import {
   AccordionDetails,
   Typography,
   CircularProgress,
+  Card,
+  CardContent,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LineChart from "../LineChart";
@@ -124,20 +126,26 @@ const TempChart = () => {
       <Accordion
         classes={{ root: styles.accordion, expanded: styles.expandedAccordion }}
       >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          classes={{
-            root: styles.accordionSummary,
-            content: styles.accordionSummaryContent,
-          }}
-        >
-          <Typography
-            sx={{ color: "#3535a9", textTransform: "uppercase" }}
-            variant="subtitle2"
-          >
-            Temperature
-          </Typography>
-        </AccordionSummary>
+        <Card sx={{ padding: 0, marginBottom: 1 }}>
+          <CardContent sx={{ padding: 0, paddingBottom: "0 !important" }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              classes={{
+                root: styles.accordionSummary,
+                content: styles.accordionSummaryContent,
+              }}
+            >
+              <Typography
+                sx={{ color: "#3535a9", textTransform: "uppercase" }}
+                variant="subtitle2"
+                py={1}
+              >
+                Temperature
+              </Typography>
+            </AccordionSummary>
+          </CardContent>
+        </Card>
+
         <AccordionDetails>
           {history.loading ? (
             <Box display="flex" justifyContent="center" mt={10}>

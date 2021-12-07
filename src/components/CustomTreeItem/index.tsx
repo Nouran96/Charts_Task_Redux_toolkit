@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { CircularProgress, Typography } from "@mui/material";
 import TreeItem, { useTreeItem } from "@mui/lab/TreeItem";
@@ -26,6 +26,7 @@ const CustomContent = React.forwardRef(function CustomContent(
     nodeId,
     typename,
     appendNewData,
+    removeCollapsedChildren,
     icon: iconProp,
     expansionIcon,
     displayIcon,
@@ -62,12 +63,18 @@ const CustomContent = React.forwardRef(function CustomContent(
   }
 
   // Lazy query for getting children of this node
-  const [getChildren, { loading, data }] = useLazyQuery(
+  const [getChildren, { loading, data, refetch }] = useLazyQuery(
     lazyQueryParams?.query,
     {
       variables: { [lazyQueryParams?.variableName]: getNodeId(nodeId) },
     }
   );
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [fetchedData, setFetchedData] = useState<any>({
+    data: null,
+    loading: false,
+  });
 
   const {
     disabled,
@@ -80,10 +87,14 @@ const CustomContent = React.forwardRef(function CustomContent(
 
   const icon = iconProp || expansionIcon || displayIcon;
 
-  // Append new children to node
   useEffect(() => {
-    if (data?.data?.results && data.data.results.length > 0 && appendNewData) {
-      appendNewData(nodeId, data.data?.results || []);
+    if (
+      fetchedData?.data &&
+      fetchedData?.data?.results &&
+      fetchedData.data.results.length > 0 &&
+      appendNewData
+    ) {
+      appendNewData(nodeId, fetchedData.data?.results || []);
 
       // Add first 10 highest populated cities for scatter chart
       if (type === "Country") {
@@ -99,13 +110,16 @@ const CustomContent = React.forwardRef(function CustomContent(
         dispatch({
           type: ADD_HIGHEST_POPULATED_CITIES,
           payload: {
-            data: data.data.results.slice(0, 10),
+            data: fetchedData.data.results.slice(0, 10),
             loading: false,
             error: false,
           },
         });
       }
-    } else if (data?.data?.results && data.data.results.length === 0) {
+    } else if (
+      fetchedData?.data?.results &&
+      fetchedData.data.results.length === 0
+    ) {
       dispatch({
         type: ADD_HIGHEST_POPULATED_CITIES,
         payload: {
@@ -115,17 +129,43 @@ const CustomContent = React.forwardRef(function CustomContent(
         },
       });
     }
+  }, [fetchedData]);
+
+  // Append new children to node
+  useEffect(() => {
+    if (data) {
+      setFetchedData({ data: data.data, loading: false });
+    }
   }, [data]);
+
+  useEffect(() => {
+    if (loading) {
+      setFetchedData({ data: null, loading: true });
+    }
+  }, [loading]);
 
   const handleExpansionClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (!data && type !== "City") {
-      getChildren();
+    if (isCollapsed && type !== "City") {
+      if (!data) getChildren();
+      else {
+        setFetchedData({ data: null, loading: true });
+
+        refetch().then(({ data }) => {
+          setFetchedData({ data: data.data, loading: false });
+        });
+      }
+    }
+
+    if (!isCollapsed && removeCollapsedChildren) {
+      removeCollapsedChildren(nodeId);
     }
 
     handleSelection(event);
     handleExpansion(event);
+
+    setIsCollapsed(!isCollapsed);
   };
 
   return (
@@ -150,7 +190,7 @@ const CustomContent = React.forwardRef(function CustomContent(
           {label}
         </Typography>
 
-        {loading && (
+        {fetchedData.loading && (
           <Box>
             <CircularProgress size={15} />
           </Box>
@@ -165,9 +205,17 @@ const CustomTreeItem = (props: CustomTreeItemProps) => {
     <TreeItem
       ContentComponent={CustomContent}
       ContentProps={
-        { typename: props.typename, appendNewData: props.appendNewData } as any
+        {
+          typename: props.typename,
+          appendNewData: props.appendNewData,
+          removeCollapsedChildren: props.removeCollapsedChildren,
+        } as any
       }
       {...props}
+      classes={{
+        group: styles.itemGroup,
+        content: styles.itemContent,
+      }}
     />
   );
 };
