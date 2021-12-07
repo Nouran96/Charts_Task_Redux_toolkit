@@ -2,14 +2,20 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import * as types from "../actionTypes";
 
 type TreeReducerState = {
-  selectedNode: string;
+  selectedNode: {
+    id: string;
+    type: string;
+  };
   highestPopulatedCities: Array<{
     node: { name: string; population: number; objectId: string };
   }>;
 };
 
 const INITIAL_STATE: TreeReducerState = {
-  selectedNode: "",
+  selectedNode: {
+    id: "",
+    type: "",
+  },
   highestPopulatedCities: [],
 };
 

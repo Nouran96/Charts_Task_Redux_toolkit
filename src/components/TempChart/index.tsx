@@ -148,7 +148,9 @@ const TempChart = () => {
               Error fetching weather history
             </Typography>
           ) : lineChartData ? (
-            <LineChart data={lineChartData} />
+            <>
+              <LineChart data={lineChartData} />
+            </>
           ) : (
             <Typography textAlign="center">No weather history found</Typography>
           )}

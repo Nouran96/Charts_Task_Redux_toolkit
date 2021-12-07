@@ -29,7 +29,10 @@ const Tree = () => {
 
   useEffect(() => {
     return () => {
-      dispatch({ type: types.ADD_SELECTED_NODES, payload: "" });
+      dispatch({
+        type: types.ADD_SELECTED_NODES,
+        payload: { id: "", type: "" },
+      });
     };
   }, []);
 
@@ -50,7 +53,27 @@ const Tree = () => {
 
   const handleSelect = (event: React.SyntheticEvent, nodeId: string) => {
     if (nodeId) {
-      dispatch({ type: types.ADD_SELECTED_NODES, payload: nodeId });
+      dispatch({
+        type: types.ADD_HIGHEST_POPULATED_CITIES,
+        payload: [],
+      });
+      dispatch({
+        type: types.ADD_SELECTED_NODES,
+        payload: { id: nodeId, type: getNodeTypeFromID(nodeId) },
+      });
+    }
+  };
+
+  const getNodeTypeFromID = (id: string): string => {
+    switch (id.slice(0, 1)) {
+      case "1":
+        return "Continent";
+      case "2":
+        return "Country";
+      case "3":
+        return "City";
+      default:
+        return "";
     }
   };
 

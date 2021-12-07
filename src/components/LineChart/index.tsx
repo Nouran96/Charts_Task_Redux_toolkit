@@ -76,9 +76,6 @@ const LineChart = ({ data }: LineChartProps) => {
             labels: {
               rotate: 0,
             },
-            axisTicks: {
-              show: false,
-            },
           },
         },
       });

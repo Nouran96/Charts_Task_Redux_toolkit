@@ -6,9 +6,12 @@ import { GET_CITY, GET_COUNTRY } from "../../utils/Queries";
 import { useLazyQuery } from "@apollo/client";
 import { getNodeId } from "../../utils/Shared";
 import CurrentWeather from "../CurrentWeather";
+import ScatterChart from "../ScatterChart";
 
 const NodeDetails = () => {
-  const { selectedNode } = useAppSelector((state) => state.tree);
+  const { selectedNode, highestPopulatedCities } = useAppSelector(
+    (state) => state.tree
+  );
   const [details, setDetails] = useState<{ data?: any }>({});
 
   const [getCountry, { data: countryDetails, loading: countryLoading }] =
@@ -31,17 +34,17 @@ const NodeDetails = () => {
   }, [cityDetails]);
 
   useEffect(() => {
-    if (selectedNode) {
-      if (selectedNode.slice(0, 1) === "1") {
+    if (selectedNode.id) {
+      if (selectedNode.id.slice(0, 1) === "1") {
         setDetails({});
       }
 
-      switch (selectedNode.slice(0, 1)) {
+      switch (selectedNode.id.slice(0, 1)) {
         case "2":
-          getCountry({ variables: { countryId: getNodeId(selectedNode) } });
+          getCountry({ variables: { countryId: getNodeId(selectedNode.id) } });
           break;
         case "3":
-          getCity({ variables: { cityId: getNodeId(selectedNode) } });
+          getCity({ variables: { cityId: getNodeId(selectedNode.id) } });
           break;
         default:
           break;
@@ -94,6 +97,14 @@ const NodeDetails = () => {
     return null;
   };
 
+  const renderLoader = () => {
+    return (
+      <Box display="flex" justifyContent="center" pt={10}>
+        <CircularProgress />
+      </Box>
+    );
+  };
+
   return (
     <Box p={1}>
       {Object.keys(details).length > 0 ? (
@@ -103,11 +114,15 @@ const NodeDetails = () => {
           </Typography>
           <CurrentWeather data={details.data} />
           <Box>{renderProps()}</Box>
+          {selectedNode.type === "Country" &&
+            (highestPopulatedCities.length > 0 ? (
+              <ScatterChart data={highestPopulatedCities} />
+            ) : (
+              renderLoader()
+            ))}
         </Box>
       ) : cityLoading || countryLoading ? (
-        <Box display="flex" justifyContent="center" pt={10}>
-          <CircularProgress />
-        </Box>
+        renderLoader()
       ) : (
         <Typography textAlign="center">Select a country or a city</Typography>
       )}
