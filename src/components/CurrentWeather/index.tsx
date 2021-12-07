@@ -1,8 +1,9 @@
-import { CircularProgress, Typography } from "@mui/material";
+import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
 import { useAppDispatch } from "../../types/Redux";
 import * as types from "../../store/actionTypes";
+import moment from "moment";
 
 type CurrentWeatherProps = {
   data: {
@@ -77,46 +78,88 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
     }
   };
 
+  const capitalizeText = (text: string): string => {
+    return text
+      .split(" ")
+      .map((word) => word.slice(0, 1).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   const renderWeatherData = () => {
     const { data } = weather;
     return (
       <Box display="flex" flexDirection="column" alignItems="center">
+        {data?.dt && (
+          <Typography variant="caption" mb={2} fontSize={16} fontWeight="bold">
+            {moment.unix(data.dt).format("D MMMM, dddd")}
+          </Typography>
+        )}
         <Box display="flex" gap={1} alignItems="center">
           <img
             src={`http://openweathermap.org/img/w/${data?.weather[0].icon}.png`}
-            alt=""
+            alt="weather_icon"
+            width="75"
           />
-          {data?.main?.temp && (
-            <Typography variant="h4">
-              {Math.round(data?.main?.temp)}°
-            </Typography>
-          )}
+          <Box>
+            {data?.main?.temp && (
+              <Typography variant="h4" textAlign="center">
+                {Math.round(data?.main?.temp)}°
+              </Typography>
+            )}
+
+            {data?.main?.feels_like && (
+              <Typography variant="subtitle2">
+                Feels like {Math.round(data?.main?.feels_like)}°
+              </Typography>
+            )}
+          </Box>
         </Box>
 
-        <Typography variant="body1">{data?.weather[0].description}</Typography>
-        {data?.main?.temp_max && data?.main?.temp_min && (
-          <Typography variant="subtitle2">
-            {Math.round(data?.main?.temp_max)}°/
-            {Math.round(data?.main?.temp_min)}°
-          </Typography>
-        )}
-        {data?.main?.feels_like && (
-          <Typography variant="subtitle2">
-            Feels like {Math.round(data?.main?.feels_like)}°
-          </Typography>
-        )}
+        <Box display="flex" alignItems="baseline" mt={2} gap={2}>
+          {data?.weather[0].description && (
+            <Typography variant="body1">
+              {capitalizeText(data?.weather[0].description)}
+            </Typography>
+          )}
+
+          {data?.main?.temp_max && data?.main?.temp_min && (
+            <Box display="flex" alignItems="end">
+              <Typography variant="h6">
+                {Math.round(data?.main?.temp_max)}°
+              </Typography>
+
+              <Typography variant="subtitle2">
+                / {Math.round(data?.main?.temp_min)}°
+              </Typography>
+            </Box>
+          )}
+        </Box>
       </Box>
     );
   };
 
   return (
-    <Box display="flex" justifyContent="center" mb={2}>
-      {!weather.data && !weather.error && <CircularProgress />}
-      {weather.error && <Typography>Error to fetch weather data</Typography>}
-      {weather.data &&
-        Object.keys(weather.data).length > 0 &&
-        renderWeatherData()}
-    </Box>
+    <Card
+      elevation={6}
+      sx={{
+        background: "linear-gradient(#cbd6f1, #6f82ad, #485e90)",
+        color: "white",
+      }}
+    >
+      <CardContent>
+        <Box display="flex" justifyContent="center" mb={2} color="white">
+          {!weather.data && !weather.error && (
+            <CircularProgress color="inherit" />
+          )}
+          {weather.error && (
+            <Typography>Error to fetch weather data</Typography>
+          )}
+          {weather.data &&
+            Object.keys(weather.data).length > 0 &&
+            renderWeatherData()}
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 

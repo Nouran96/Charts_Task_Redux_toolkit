@@ -89,9 +89,31 @@ const CustomContent = React.forwardRef(function CustomContent(
       if (type === "Country") {
         dispatch({
           type: ADD_HIGHEST_POPULATED_CITIES,
-          payload: data.data.results.slice(0, 10),
+          payload: {
+            data: [],
+            loading: true,
+            error: false,
+          },
+        });
+
+        dispatch({
+          type: ADD_HIGHEST_POPULATED_CITIES,
+          payload: {
+            data: data.data.results.slice(0, 10),
+            loading: false,
+            error: false,
+          },
         });
       }
+    } else if (data?.data?.results && data.data.results.length === 0) {
+      dispatch({
+        type: ADD_HIGHEST_POPULATED_CITIES,
+        payload: {
+          data: [],
+          loading: false,
+          error: true,
+        },
+      });
     }
   }, [data]);
 

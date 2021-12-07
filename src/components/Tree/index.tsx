@@ -54,10 +54,6 @@ const Tree = () => {
   const handleSelect = (event: React.SyntheticEvent, nodeId: string) => {
     if (nodeId) {
       dispatch({
-        type: types.ADD_HIGHEST_POPULATED_CITIES,
-        payload: [],
-      });
-      dispatch({
         type: types.ADD_SELECTED_NODES,
         payload: { id: nodeId, type: getNodeTypeFromID(nodeId) },
       });

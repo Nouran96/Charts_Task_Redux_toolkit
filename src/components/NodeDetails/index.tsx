@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CircularProgress, Typography } from "@mui/material";
+import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useAppSelector } from "../../types/Redux";
 import { GET_CITY, GET_COUNTRY } from "../../utils/Queries";
@@ -112,14 +112,28 @@ const NodeDetails = () => {
           <Typography variant="h5" mb={2} textAlign="center">
             {details.data?.name}
           </Typography>
-          <CurrentWeather data={details.data} />
-          <Box>{renderProps()}</Box>
+          <Box
+            mb={2}
+            display="grid"
+            gridTemplateColumns="repeat(auto-fill, minmax(230px, 1fr))"
+            gap={2}
+          >
+            <CurrentWeather data={details.data} />
+
+            <Card>
+              <CardContent>{renderProps()}</CardContent>
+            </Card>
+          </Box>
           {selectedNode.type === "Country" &&
-            (highestPopulatedCities.length > 0 ? (
-              <ScatterChart data={highestPopulatedCities} />
-            ) : (
+            (highestPopulatedCities.data.length > 0 ? (
+              <ScatterChart data={highestPopulatedCities.data} />
+            ) : highestPopulatedCities.loading ? (
               renderLoader()
-            ))}
+            ) : highestPopulatedCities.error ? (
+              <Typography textAlign="center">
+                Error to fetch highest populated cities
+              </Typography>
+            ) : null)}
         </Box>
       ) : cityLoading || countryLoading ? (
         renderLoader()

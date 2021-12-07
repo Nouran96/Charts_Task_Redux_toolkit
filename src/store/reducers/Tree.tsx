@@ -6,9 +6,13 @@ type TreeReducerState = {
     id: string;
     type: string;
   };
-  highestPopulatedCities: Array<{
-    node: { name: string; population: number; objectId: string };
-  }>;
+  highestPopulatedCities: {
+    data: Array<{
+      node: { name: string; population: number; objectId: string };
+    }>;
+    loading: boolean;
+    error: boolean;
+  };
 };
 
 const INITIAL_STATE: TreeReducerState = {
@@ -16,7 +20,11 @@ const INITIAL_STATE: TreeReducerState = {
     id: "",
     type: "",
   },
-  highestPopulatedCities: [],
+  highestPopulatedCities: {
+    data: [],
+    loading: false,
+    error: false,
+  },
 };
 
 export default function treeReducer(
