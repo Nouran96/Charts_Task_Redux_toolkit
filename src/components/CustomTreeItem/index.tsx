@@ -73,7 +73,6 @@ const CustomContent = React.forwardRef(function CustomContent(
     }
   );
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const [fetchedData, setFetchedData] = useState<any>({
     data: null,
     loading: false,
@@ -106,7 +105,6 @@ const CustomContent = React.forwardRef(function CustomContent(
           payload: {
             data: [],
             loading: true,
-            error: false,
           },
         });
 
@@ -115,7 +113,6 @@ const CustomContent = React.forwardRef(function CustomContent(
           payload: {
             data: fetchedData.data.results.slice(0, 10),
             loading: false,
-            error: false,
           },
         });
       }
@@ -128,7 +125,6 @@ const CustomContent = React.forwardRef(function CustomContent(
         payload: {
           data: [],
           loading: false,
-          error: true,
         },
       });
     }

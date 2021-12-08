@@ -19,10 +19,10 @@ const Monitor = () => {
   return (
     <Box className={styles.monitorContainer}>
       <Box className={styles.firstColumnContainer}>
-        <Card sx={{ padding: 0, marginBottom: 1 }}>
+        <Card sx={{ padding: 0 }}>
           <CardContent sx={{ padding: 0, paddingBottom: "0 !important" }}>
             <Typography
-              sx={{ color: "#3535a9", textTransform: "uppercase" }}
+              sx={{ color: "var(--main-color)", textTransform: "uppercase" }}
               px={2}
               py={1}
               variant="subtitle2"
@@ -32,7 +32,7 @@ const Monitor = () => {
           </CardContent>
         </Card>
 
-        <Box px={2}>
+        <Box px={2} pt={2}>
           <Tree />
         </Box>
       </Box>

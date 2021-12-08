@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import TreeView from "@mui/lab/TreeView";
-import { CircularProgress, SvgIcon } from "@mui/material";
+import { CircularProgress, SvgIcon, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { GET_CONTINENTS } from "../../utils/Queries";
@@ -16,7 +16,7 @@ function MinusSquare(props: any) {
   return (
     <SvgIcon
       fontSize="inherit"
-      style={{ width: 14, height: 14, color: "#3535a9" }}
+      style={{ width: 14, height: 14, color: "var(--main-color)" }}
       {...props}
     >
       {/* tslint:disable-next-line: max-line-length */}
@@ -29,7 +29,7 @@ function PlusSquare(props: any) {
   return (
     <SvgIcon
       fontSize="inherit"
-      style={{ width: 14, height: 14, color: "#3535a9" }}
+      style={{ width: 14, height: 14, color: "var(--main-color)" }}
       {...props}
     >
       {/* tslint:disable-next-line: max-line-length */}
@@ -40,7 +40,7 @@ function PlusSquare(props: any) {
 
 const Tree = () => {
   // Get all continents on first render
-  const { loading, data: allContinents } = useQuery(GET_CONTINENTS);
+  const { loading, data: allContinents, error } = useQuery(GET_CONTINENTS);
   // Data to render all tree items from
   const [treeItemsData, setTreeItemsData] = useState([]);
   const [expanded, setExpanded] = useState<Array<string>>([]);
@@ -156,6 +156,12 @@ const Tree = () => {
     return (
       <Box display="flex" justifyContent="center" paddingTop={10}>
         <CircularProgress />
+      </Box>
+    );
+  if (error)
+    return (
+      <Box display="flex" justifyContent="center">
+        <Typography className="error">Failed to fetch continents</Typography>
       </Box>
     );
   else if (allContinents)

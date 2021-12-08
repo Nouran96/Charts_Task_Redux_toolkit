@@ -22,7 +22,7 @@
 }
 
 .activeLink .listItem {
-  background-color: #3535a9;
+  background-color: var(--main-color);
 }
 
 .activeLink .listItemIcon {

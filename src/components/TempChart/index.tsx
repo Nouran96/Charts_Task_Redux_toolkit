@@ -135,7 +135,7 @@ const TempChart = () => {
               }}
             >
               <Typography
-                sx={{ color: "#3535a9", textTransform: "uppercase" }}
+                sx={{ color: "var(--main-color)", textTransform: "uppercase" }}
                 variant="subtitle2"
                 py={1}
               >
@@ -151,7 +151,7 @@ const TempChart = () => {
               <CircularProgress />
             </Box>
           ) : history.error ? (
-            <Typography textAlign="center">
+            <Typography textAlign="center" className="error">
               Error fetching weather history
             </Typography>
           ) : lineChartData ? (
@@ -159,7 +159,9 @@ const TempChart = () => {
               <LineChart data={lineChartData} />
             </>
           ) : (
-            <Typography textAlign="center">No weather history found</Typography>
+            <Typography textAlign="center" className="error">
+              No weather history found
+            </Typography>
           )}
         </AccordionDetails>
       </Accordion>

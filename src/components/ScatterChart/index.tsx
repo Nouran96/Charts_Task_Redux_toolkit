@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@mui/material";
 import { ApexOptions } from "apexcharts";
 import * as React from "react";
 import Chart from "react-apexcharts";
@@ -36,9 +37,16 @@ const ScatterChart = ({ data }: ScatterChartProps) => {
               show: false,
             },
           },
+          colors: ["var(--secondary-color)"],
           title: {
             text: "Highest Populated Cities",
             align: "center",
+            style: {
+              color: "var(--main-color)",
+              fontSize: "18px",
+              fontFamily: "Oswald, Helvetica, Arial, sans-serif",
+              fontWeight: 400,
+            },
           },
           xaxis: {
             type: "category",
@@ -47,6 +55,22 @@ const ScatterChart = ({ data }: ScatterChartProps) => {
               rotate: 0,
               trim: true,
               hideOverlappingLabels: false,
+              style: {
+                fontFamily: "Oswald, Helvetica, Arial, sans-serif",
+                fontWeight: 300,
+                fontSize: "12px",
+                colors: "var(--main-color)",
+              },
+            },
+          },
+          yaxis: {
+            labels: {
+              style: {
+                fontFamily: "Oswald, Helvetica, Arial, sans-serif",
+                fontWeight: 300,
+                fontSize: "12px",
+                colors: "var(--main-color)",
+              },
             },
           },
         },
@@ -61,12 +85,16 @@ const ScatterChart = ({ data }: ScatterChartProps) => {
   return (
     <div id="chart">
       {chartOptions.options && (
-        <Chart
-          options={chartOptions.options}
-          series={chartOptions.series}
-          type="scatter"
-          height={350}
-        />
+        <Card elevation={6}>
+          <CardContent>
+            <Chart
+              options={chartOptions.options}
+              series={chartOptions.series}
+              type="scatter"
+              height={350}
+            />
+          </CardContent>
+        </Card>
       )}
     </div>
   );

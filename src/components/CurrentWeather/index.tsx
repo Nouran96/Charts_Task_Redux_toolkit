@@ -73,7 +73,7 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
           });
         }
       } catch (err: any) {
-        console.error(err.response.message);
+        console.error(err);
       }
     }
   };

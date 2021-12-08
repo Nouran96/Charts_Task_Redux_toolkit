@@ -1,6 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import FlagIcon from "@mui/icons-material/Flag";
+import PaidIcon from "@mui/icons-material/Paid";
 import { useAppSelector } from "../../types/Redux";
 import { GET_CITY, GET_COUNTRY } from "../../utils/Queries";
 import { useLazyQuery } from "@apollo/client";
@@ -67,40 +71,144 @@ const NodeDetails = () => {
     const nodeType = details?.data?.__typename?.split("_")[1];
 
     if (nodeType === "Country") {
+      const { capital, currency } = details.data;
+
+      if (!capital && !currency)
+        return (
+          <Box display="flex" justifyContent="center">
+            <Typography className="error">No details found</Typography>
+          </Box>
+        );
+
       return (
         <Box display="flex" flexDirection="column">
-          {details.data.capital && (
-            <Box display="flex" gap={1} alignItems="baseline">
-              <Typography variant="subtitle2">Capital: </Typography>
-              <Typography>{details.data.capital}</Typography>
+          {capital && (
+            <Box
+              display="flex"
+              gap={1}
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                sx={{ color: "var(--secondary-color)" }}
+              >
+                <FlagIcon color="inherit" />
+                <Typography variant="subtitle2" color="black">
+                  Capital
+                </Typography>
+              </Box>
+              <Typography>{capital}</Typography>
             </Box>
           )}
 
-          {details.data.currency && (
-            <Box display="flex" gap={1} alignItems="baseline">
-              <Typography variant="subtitle2">Currency: </Typography>
-              <Typography>{details.data.currency}</Typography>
+          {currency && (
+            <Box
+              display="flex"
+              gap={1}
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                sx={{ color: "var(--secondary-color)" }}
+              >
+                <PaidIcon color="inherit" />
+                <Typography variant="subtitle2" color="black">
+                  Currency
+                </Typography>
+              </Box>
+              <Typography>{currency}</Typography>
             </Box>
           )}
         </Box>
       );
     } else if (nodeType === "City") {
+      const { population, location } = details.data;
+
+      if (!location && !population)
+        return (
+          <Box display="flex" justifyContent="center">
+            <Typography>No details found</Typography>
+          </Box>
+        );
+
       return (
         <Box display="flex" flexDirection="column">
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Population: </Typography>
-            <Typography>{details.data.population}</Typography>
-          </Box>
+          {population && (
+            <Box
+              display="flex"
+              gap={1}
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                sx={{ color: "var(--secondary-color)" }}
+              >
+                <PeopleAltOutlinedIcon color="inherit" />
+                <Typography variant="subtitle2" color="black">
+                  Population
+                </Typography>
+              </Box>
+              <Typography>{population}</Typography>
+            </Box>
+          )}
 
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Latitude: </Typography>
-            <Typography>{details.data.location.latitude}</Typography>
-          </Box>
+          {location?.latitude && (
+            <Box
+              display="flex"
+              gap={1}
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                sx={{ color: "var(--secondary-color)" }}
+              >
+                <LocationOnIcon color="inherit" />
+                <Typography variant="subtitle2" color="black">
+                  Latitude
+                </Typography>
+              </Box>
+              <Typography>{location.latitude}</Typography>
+            </Box>
+          )}
 
-          <Box display="flex" gap={1} alignItems="baseline">
-            <Typography variant="subtitle2">Longitude: </Typography>
-            <Typography>{details.data.location.longitude}</Typography>
-          </Box>
+          {location?.longitude && (
+            <Box
+              display="flex"
+              gap={1}
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap="wrap"
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={1}
+                sx={{ color: "var(--secondary-color)" }}
+              >
+                <LocationOnIcon color="inherit" />
+                <Typography variant="subtitle2" color="black">
+                  Longitude
+                </Typography>
+              </Box>
+              <Typography>{location.longitude}</Typography>
+            </Box>
+          )}
         </Box>
       );
     }
@@ -120,36 +228,43 @@ const NodeDetails = () => {
     <Box p={1}>
       {Object.keys(details).length > 0 ? (
         <Box display="flex" flexDirection="column">
-          <Typography variant="h5" mb={2} textAlign="center">
+          <Typography
+            variant="h5"
+            mb={2}
+            textAlign="center"
+            sx={{ color: "var(--main-color)" }}
+          >
             {details.data?.name}
           </Typography>
           <Box
-            mb={2}
+            mb={4}
             display="grid"
-            gridTemplateColumns="repeat(auto-fill, minmax(230px, 1fr))"
-            gap={2}
+            gridTemplateColumns="repeat(auto-fit, minmax(200px, 1fr))"
+            justifyContent="center"
+            alignItems="center"
+            gap={3}
           >
+            <Box>
+              <Typography mb={2} variant="h6">
+                Details
+              </Typography>
+              {renderProps()}
+            </Box>
             <CurrentWeather data={details.data} />
-
-            <Card>
-              <CardContent>{renderProps()}</CardContent>
-            </Card>
           </Box>
           {selectedNode.type === "Country" &&
             (highestPopulatedCities.data.length > 0 ? (
               <ScatterChart data={highestPopulatedCities.data} />
             ) : highestPopulatedCities.loading ? (
               renderLoader()
-            ) : highestPopulatedCities.error ? (
-              <Typography textAlign="center">
-                Error to fetch highest populated cities
-              </Typography>
             ) : null)}
         </Box>
       ) : cityLoading || countryLoading ? (
         renderLoader()
       ) : (
-        <Typography textAlign="center">Select a country or a city</Typography>
+        <Typography textAlign="center" className="error">
+          Select a country or a city
+        </Typography>
       )}
     </Box>
   );

@@ -11,7 +11,6 @@ type TreeReducerState = {
       node: { name: string; population: number; objectId: string };
     }>;
     loading: boolean;
-    error: boolean;
   };
 };
 
@@ -23,7 +22,6 @@ const INITIAL_STATE: TreeReducerState = {
   highestPopulatedCities: {
     data: [],
     loading: false,
-    error: false,
   },
 };
 
