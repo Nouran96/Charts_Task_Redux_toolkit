@@ -71,7 +71,6 @@ const TempChart = () => {
 
       const dayBeforeData = await dayBeforeResponse.json();
       const todayData = await todayResponse.json();
-      // console.log(data);
       if (
         (dayBeforeData.cod && dayBeforeData.cod !== 200) ||
         (todayData.cod && todayData.cod !== 200)

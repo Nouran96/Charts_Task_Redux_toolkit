@@ -26,6 +26,7 @@ export const getModifiedData = (
     for (let prop in originalDataCopy) {
       if (prop === "objectId") {
         if (originalDataCopy[prop] === getNodeId(nodeId)) {
+          // If children is already an array, revert it back to object with count else append data
           if (originalDataCopy.children instanceof Array) {
             originalDataCopy.children = {
               count: originalDataCopy.children.length,
@@ -55,4 +56,17 @@ export const getModifiedData = (
 
 export const getNodeId = (customNodeId: string): string => {
   return customNodeId.split("_")[1];
+};
+
+export const getNodeTypeFromID = (id: string): string => {
+  switch (id.slice(0, 1)) {
+    case "1":
+      return "Continent";
+    case "2":
+      return "Country";
+    case "3":
+      return "City";
+    default:
+      return "";
+  }
 };

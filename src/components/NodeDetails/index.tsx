@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useAppSelector } from "../../types/Redux";
@@ -13,28 +13,29 @@ const NodeDetails = () => {
     (state) => state.tree
   );
   const [details, setDetails] = useState<{ data?: any }>({});
-  const [previousNodeId, setPreviousNodeId] = useState(null);
 
-  const [
-    getCountry,
-    { data: countryDetails, loading: countryLoading, refetch: countryRefetch },
-  ] = useLazyQuery(GET_COUNTRY);
+  const [getCountry, { data: countryDetails, loading: countryLoading }] =
+    useLazyQuery(GET_COUNTRY);
 
-  const [
-    getCity,
-    { data: cityDetails, loading: cityLoading, refetch: cityRefetch },
-  ] = useLazyQuery(GET_CITY);
+  const [getCity, { data: cityDetails, loading: cityLoading }] =
+    useLazyQuery(GET_CITY);
+
+  const fetchedNodeIds: {
+    [key: string]: typeof cityDetails | typeof countryDetails;
+  } = {};
 
   // Set details array with either the country or city details
   useEffect(() => {
     if (countryDetails) {
       setDetails(countryDetails);
+      fetchedNodeIds[selectedNode.id] = countryDetails;
     }
   }, [countryDetails]);
 
   useEffect(() => {
     if (cityDetails) {
       setDetails(cityDetails);
+      fetchedNodeIds[selectedNode.id] = cityDetails;
     }
   }, [cityDetails]);
 
@@ -42,31 +43,22 @@ const NodeDetails = () => {
     setDetails({});
 
     if (selectedNode.id) {
-      if (previousNodeId !== selectedNode.id) {
-        setPreviousNodeId(selectedNode.id);
-
-        switch (selectedNode.id.slice(0, 1)) {
-          case "2":
-            getCountry({
-              variables: { countryId: getNodeId(selectedNode.id) },
-            });
-
-            countryRefetch({
-              variables: { countryId: getNodeId(selectedNode.id) },
-            }).then((response) => {
-              if (response?.data) {
-                setDetails(response.data);
-              }
-            });
-            break;
-          case "3":
-            getCity({ variables: { cityId: getNodeId(selectedNode.id) } });
-            break;
-          default:
-            break;
-        }
-      } else {
-        setPreviousNodeId(null);
+      switch (selectedNode.id.slice(0, 1)) {
+        case "2":
+          // Get country details from cache after first call
+          fetchedNodeIds[selectedNode.id]
+            ? setDetails(fetchedNodeIds[selectedNode.id])
+            : getCountry({
+                variables: { countryId: getNodeId(selectedNode.id) },
+              });
+          break;
+        case "3":
+          fetchedNodeIds[selectedNode.id]
+            ? setDetails(fetchedNodeIds[selectedNode.id])
+            : getCity({ variables: { cityId: getNodeId(selectedNode.id) } });
+          break;
+        default:
+          break;
       }
     }
   }, [selectedNode]);

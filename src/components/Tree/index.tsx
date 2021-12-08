@@ -7,9 +7,9 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { GET_CONTINENTS } from "../../utils/Queries";
 import CustomTreeItem from "../CustomTreeItem";
 import styles from "./styles.module.css";
-import { getModifiedData } from "../../utils/Shared";
+import { getModifiedData, getNodeTypeFromID } from "../../utils/Shared";
 import { Box } from "@mui/system";
-import { useAppDispatch } from "../../types/Redux";
+import { useAppDispatch, useAppSelector } from "../../types/Redux";
 import * as types from "../../store/actionTypes";
 
 function MinusSquare(props: any) {
@@ -62,6 +62,7 @@ const Tree = () => {
     };
   }, []);
 
+  // Remove collapsed children from main array for correct rendering of nodes
   const removeCollapsedChildren = (nodeId: string) => {
     const itemsDataCopy = JSON.parse(JSON.stringify(treeItemsData));
 
@@ -74,6 +75,7 @@ const Tree = () => {
     event: SyntheticEvent<Element, Event>,
     nodeIds: Array<string>
   ) => {
+    // Compare newest node to other nodes if they are in the same level
     const foundOpenedNodeInTheSameLevel = nodeIds.find(
       (id) => id.startsWith(nodeIds[0].slice(0, 1)) && id !== nodeIds[0]
     );
@@ -81,7 +83,7 @@ const Tree = () => {
     // Close all nodes if another one is opened in the same level
     if (nodeIds.length > 1 && foundOpenedNodeInTheSameLevel) {
       collapseAllInTheSameLevelAndDeeper(nodeIds);
-      // If upper node is collapsed, collapse all inner nodes
+      // If upper node is collapsed, collapse all inner nodes (Reclicking a node)
     } else if (nodeIds.length === 1 && nodeIds[0].slice(0, 1) !== "1") {
       setExpanded([]);
     } else {
@@ -98,25 +100,19 @@ const Tree = () => {
     }
   };
 
-  const getNodeTypeFromID = (id: string): string => {
-    switch (id.slice(0, 1)) {
-      case "1":
-        return "Continent";
-      case "2":
-        return "Country";
-      case "3":
-        return "City";
-      default:
-        return "";
-    }
-  };
-
   const collapseAllInTheSameLevelAndDeeper = (nodeIds: Array<string>) => {
-    setExpanded(
-      nodeIds.filter(
-        (id, index) => +id.slice(0, 1) < +nodeIds[0].slice(0, 1) || index === 0
-      )
-    );
+    let expandedArr = [];
+
+    for (let i = 0; i < nodeIds.length; i++) {
+      // Add only the newest node and any upper nodes to expanded array
+      if (i === 0 || +nodeIds[i].slice(0, 1) < +nodeIds[0].slice(0, 1)) {
+        expandedArr.push(nodeIds[i]);
+      } else {
+        removeCollapsedChildren(nodeIds[i]);
+      }
+    }
+
+    setExpanded(expandedArr);
   };
 
   // Add new data in its correct place in treeItemsData array
@@ -172,6 +168,7 @@ const Tree = () => {
         expanded={expanded}
         onNodeToggle={handleToggle}
         onNodeSelect={handleSelect}
+        // onNodeFocus={handleSelect}
       >
         {treeItemsData.map((continent: any) => {
           return renderChild(continent.node);

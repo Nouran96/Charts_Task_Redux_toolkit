@@ -13,7 +13,10 @@ import {
 import styles from "./styles.module.css";
 import { getNodeId } from "../../utils/Shared";
 import { useAppDispatch } from "../../types/Redux";
-import { ADD_HIGHEST_POPULATED_CITIES } from "../../store/actionTypes";
+import {
+  ADD_HIGHEST_POPULATED_CITIES,
+  ADD_SELECTED_NODES,
+} from "../../store/actionTypes";
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: CustomTreeItemContentProps,
@@ -147,25 +150,32 @@ const CustomContent = React.forwardRef(function CustomContent(
   const handleExpansionClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (isCollapsed && type !== "City") {
-      if (!data) getChildren();
-      else {
-        setFetchedData({ data: null, loading: true });
+    if (!expanded) {
+      if (type !== "City") {
+        if (!data) getChildren();
+        else {
+          setFetchedData({ data: null, loading: true });
 
-        refetch().then(({ data }) => {
-          setFetchedData({ data: data.data, loading: false });
-        });
+          refetch().then(({ data }) => {
+            setFetchedData({ data: data.data, loading: false });
+          });
+        }
       }
+
+      handleSelection(event);
     }
 
-    if (!isCollapsed && removeCollapsedChildren) {
+    if (expanded && removeCollapsedChildren) {
       removeCollapsedChildren(nodeId);
+      dispatch({
+        type: ADD_SELECTED_NODES,
+        payload: { id: "", type: "" },
+      });
     }
 
-    handleSelection(event);
-    handleExpansion(event);
-
-    setIsCollapsed(!isCollapsed);
+    if (type !== "City") {
+      handleExpansion(event);
+    }
   };
 
   return (
