@@ -9,6 +9,8 @@
 .drawerPaper {
   width: inherit;
   overflow-x: hidden;
+  background-color: var(--main-color) !important;
+  border-right: none !important;
 }
 
 .drawer .listItem {
@@ -18,15 +20,17 @@
 
 .drawer .listItemIcon {
   min-width: 24px;
-  color: rgba(0, 0, 0, 0.7);
+  /* color: rgba(0, 0, 0, 0.7); */
+  color: #fff;
 }
 
 .activeLink .listItem {
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
+  background: #fff;
 }
 
 .activeLink .listItemIcon {
-  color: white;
+  color: var(--main-color);
 }
 
 .logo {
