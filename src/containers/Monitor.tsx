@@ -26,6 +26,7 @@ const Monitor = () => {
               px={2}
               py={1}
               variant="subtitle2"
+              fontWeight={700}
             >
               The World
             </Typography>

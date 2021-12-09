@@ -97,7 +97,7 @@ const NodeDetails = () => {
                 sx={{ color: "var(--secondary-color)" }}
               >
                 <FlagIcon color="inherit" />
-                <Typography variant="subtitle2" color="black">
+                <Typography variant="subtitle2" fontWeight={600} color="black">
                   Capital
                 </Typography>
               </Box>
@@ -120,7 +120,7 @@ const NodeDetails = () => {
                 sx={{ color: "var(--secondary-color)" }}
               >
                 <PaidIcon color="inherit" />
-                <Typography variant="subtitle2" color="black">
+                <Typography variant="subtitle2" fontWeight={600} color="black">
                   Currency
                 </Typography>
               </Box>
@@ -156,7 +156,7 @@ const NodeDetails = () => {
                 sx={{ color: "var(--secondary-color)" }}
               >
                 <PeopleAltOutlinedIcon color="inherit" />
-                <Typography variant="subtitle2" color="black">
+                <Typography variant="subtitle2" fontWeight={600} color="black">
                   Population
                 </Typography>
               </Box>
@@ -179,7 +179,7 @@ const NodeDetails = () => {
                 sx={{ color: "var(--secondary-color)" }}
               >
                 <LocationOnIcon color="inherit" />
-                <Typography variant="subtitle2" color="black">
+                <Typography variant="subtitle2" fontWeight={600} color="black">
                   Latitude
                 </Typography>
               </Box>
@@ -202,7 +202,7 @@ const NodeDetails = () => {
                 sx={{ color: "var(--secondary-color)" }}
               >
                 <LocationOnIcon color="inherit" />
-                <Typography variant="subtitle2" color="black">
+                <Typography variant="subtitle2" fontWeight={600} color="black">
                   Longitude
                 </Typography>
               </Box>
@@ -245,7 +245,7 @@ const NodeDetails = () => {
             gap={3}
           >
             <Box>
-              <Typography mb={2} variant="h6">
+              <Typography mb={2} variant="h6" fontWeight={600}>
                 Details
               </Typography>
               {renderProps()}

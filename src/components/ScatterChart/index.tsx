@@ -45,7 +45,7 @@ const ScatterChart = ({ data }: ScatterChartProps) => {
               color: "var(--main-color)",
               fontSize: "18px",
               fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-              fontWeight: 400,
+              fontWeight: 600,
             },
           },
           xaxis: {
@@ -56,8 +56,8 @@ const ScatterChart = ({ data }: ScatterChartProps) => {
               trim: true,
               hideOverlappingLabels: false,
               style: {
-                fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-                fontWeight: 300,
+                fontFamily: "var(--main-font), Helvetica, Arial, sans-serif",
+                fontWeight: 400,
                 fontSize: "12px",
                 colors: "var(--main-color)",
               },
@@ -65,9 +65,10 @@ const ScatterChart = ({ data }: ScatterChartProps) => {
           },
           yaxis: {
             labels: {
+              offsetX: -10,
               style: {
-                fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-                fontWeight: 300,
+                fontFamily: "var(--main-font), Helvetica, Arial, sans-serif",
+                fontWeight: 400,
                 fontSize: "12px",
                 colors: "var(--main-color)",
               },

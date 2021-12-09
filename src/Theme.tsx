@@ -16,11 +16,11 @@ declare module "@mui/material/styles" {
 
 const theme = createTheme({
   typography: {
-    fontFamily: `"Oswald", "Roboto", "Helvetica", "Arial", sans-serif`,
+    fontFamily: `"Titillium Web", "Roboto", "Helvetica", "Arial", sans-serif`,
     fontSize: 14,
-    fontWeightLight: 200,
-    fontWeightRegular: 300,
-    fontWeightBold: 400,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightBold: 600,
   },
 });
 

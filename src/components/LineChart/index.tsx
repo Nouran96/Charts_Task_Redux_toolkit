@@ -43,6 +43,10 @@ const LineChart = ({ data }: LineChartProps) => {
           },
           dataLabels: {
             enabled: true,
+            formatter: function (val: string) {
+              return val + "°";
+            },
+            offsetX: 5,
             style: {
               colors: ["var(--secondary-color)"],
             },
@@ -50,7 +54,6 @@ const LineChart = ({ data }: LineChartProps) => {
           colors: ["var(--secondary-color)"],
           stroke: {
             curve: "smooth",
-            // colors: ["var(--secondary-color)"],
           },
           title: {
             text: "History",
@@ -58,16 +61,16 @@ const LineChart = ({ data }: LineChartProps) => {
             style: {
               color: "var(--main-color)",
               fontSize: "18px",
-              fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-              fontWeight: 400,
+              fontFamily: "var(--main-font), Helvetica, Arial, sans-serif",
+              fontWeight: 600,
             },
           },
           subtitle: {
             text: "Weather data for last 24, 12 & 6 hours",
             style: {
               fontSize: "14px",
-              fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-              fontWeight: 200,
+              fontFamily: "var(--main-font), Helvetica, Arial, sans-serif",
+              fontWeight: 300,
             },
           },
           grid: {
@@ -78,13 +81,14 @@ const LineChart = ({ data }: LineChartProps) => {
           },
           yaxis: {
             labels: {
+              offsetX: -10,
               formatter: function (value) {
                 return roundNumberToTwoDecimalPlaces(value) + "°";
               },
               align: "center",
               style: {
-                fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-                fontWeight: 300,
+                fontFamily: "var(--main-font), Helvetica, Arial, sans-serif",
+                fontWeight: 400,
                 fontSize: "12px",
                 colors: "var(--main-color)",
               },
@@ -98,8 +102,8 @@ const LineChart = ({ data }: LineChartProps) => {
             labels: {
               rotate: 0,
               style: {
-                fontFamily: "Oswald, Helvetica, Arial, sans-serif",
-                fontWeight: 300,
+                fontFamily: "var(--main-font), Helvetica, Arial, sans-serif",
+                fontWeight: 400,
                 fontSize: "12px",
                 colors: "var(--main-color)",
               },

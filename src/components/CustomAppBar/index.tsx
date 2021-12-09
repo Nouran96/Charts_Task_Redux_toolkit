@@ -15,6 +15,7 @@ const CustomAppBar = ({ title }: CustomAppBarProps) => {
               sx={{ color: "var(--main-color)", textTransform: "uppercase" }}
               variant="subtitle2"
               py={1}
+              fontWeight={700}
             >
               {title || "Home"}
             </Typography>
