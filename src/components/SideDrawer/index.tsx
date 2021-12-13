@@ -8,14 +8,29 @@ import {
   ListItemIcon,
   Tooltip,
   IconButton,
+  useMediaQuery,
 } from "@mui/material";
 import MonitorIcon from "@mui/icons-material/Monitor";
 import SettingsIcon from "@mui/icons-material/Settings";
+import PublicIcon from "@mui/icons-material/Public";
 import logo from "../../assets/images/logo.png";
 import styles from "./styles.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { useAppDispatch } from "../../types/Redux";
+import { TOGGLE_TREE_DRAWER } from "../../store/actionTypes";
 
 const SideDrawer = () => {
+  const mobileSize = useMediaQuery("(max-width: 650px)");
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+
+  const toggleTreeDrawer = () => {
+    dispatch({
+      type: TOGGLE_TREE_DRAWER,
+      payload: null,
+    });
+  };
+
   return (
     <React.Fragment>
       <Drawer
@@ -52,17 +67,33 @@ const SideDrawer = () => {
           flexDirection="column"
           justifyContent="end"
         >
-          <List>
-            <NavLink to="/settings">
-              <Tooltip title="Settings">
-                <ListItem classes={{ root: styles.listItem }}>
-                  <ListItemIcon classes={{ root: styles.listItemIcon }}>
-                    <SettingsIcon />
-                  </ListItemIcon>
-                </ListItem>
-              </Tooltip>
-            </NavLink>
-          </List>
+          {mobileSize && location.pathname === "/monitor" && (
+            <Box sx={{ cursor: "pointer" }} onClick={toggleTreeDrawer}>
+              <List>
+                <Tooltip title="Toggle tree">
+                  <ListItem classes={{ root: styles.listItem }}>
+                    <ListItemIcon classes={{ root: styles.listItemIcon }}>
+                      <PublicIcon />
+                    </ListItemIcon>
+                  </ListItem>
+                </Tooltip>
+              </List>
+            </Box>
+          )}
+
+          <Box>
+            <List>
+              <NavLink to="/settings">
+                <Tooltip title="Settings">
+                  <ListItem classes={{ root: styles.listItem }}>
+                    <ListItemIcon classes={{ root: styles.listItemIcon }}>
+                      <SettingsIcon />
+                    </ListItemIcon>
+                  </ListItem>
+                </Tooltip>
+              </NavLink>
+            </List>
+          </Box>
         </Box>
       </Drawer>
     </React.Fragment>

@@ -27,6 +27,10 @@
   width: 350px;
 }
 
+.treeDrawerPaper {
+  left: 50px !important;
+}
+
 @media screen and (max-width: 1001px) {
   .thirdColumnContainer {
     flex-grow: 1;
@@ -41,11 +45,5 @@
 
   .monitorContainer {
     flex-wrap: wrap;
-  }
-}
-
-@media screen and (max-width: 650px) {
-  .firstColumnContainer {
-    width: 100%;
   }
 }

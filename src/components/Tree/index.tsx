@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import TreeView from "@mui/lab/TreeView";
 import { CircularProgress, SvgIcon, Typography } from "@mui/material";
 import { GET_CONTINENTS } from "../../utils/Queries";
@@ -38,10 +38,12 @@ function PlusSquare(props: any) {
 
 const Tree = () => {
   // Get all continents on first render
-  const { loading, data: allContinents, error } = useQuery(GET_CONTINENTS);
+  const [getContinents, { loading, data: allContinents, error }] =
+    useLazyQuery(GET_CONTINENTS);
+  const { expandedNodes, treeData } = useAppSelector((state) => state.tree);
   // Data to render all tree items from
-  const [treeItemsData, setTreeItemsData] = useState([]);
-  const [expanded, setExpanded] = useState<Array<string>>([]);
+  const [treeItemsData, setTreeItemsData] = useState(treeData);
+  const [expanded, setExpanded] = useState<Array<string>>(expandedNodes);
   const dispatch = useAppDispatch();
 
   // Set treeItemsData with continents recieved
@@ -52,13 +54,31 @@ const Tree = () => {
   }, [allContinents]);
 
   useEffect(() => {
-    return () => {
-      dispatch({
-        type: types.ADD_SELECTED_NODES,
-        payload: { id: "", type: "" },
-      });
-    };
+    if (treeData.length === 0) {
+      getContinents();
+    }
+
+    // return () => {
+    //   dispatch({
+    //     type: types.ADD_SELECTED_NODES,
+    //     payload: { id: "", type: "" },
+    //   });
+    // };
   }, []);
+
+  useEffect(() => {
+    dispatch({
+      type: types.ADD_EXPANDED_NODES,
+      payload: expanded,
+    });
+  }, [expanded]);
+
+  useEffect(() => {
+    dispatch({
+      type: types.ADD_TREE_DATA,
+      payload: treeItemsData,
+    });
+  }, [treeItemsData]);
 
   // Remove collapsed children from main array for correct rendering of nodes
   const removeCollapsedChildren = (nodeId: string) => {
@@ -162,7 +182,7 @@ const Tree = () => {
         <Typography className="error">Failed to fetch continents</Typography>
       </Box>
     );
-  else if (allContinents)
+  else if (treeItemsData)
     return (
       <TreeView
         classes={{ root: styles.treeView }}
