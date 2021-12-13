@@ -1,6 +1,7 @@
 .monitorContainer {
   display: flex;
   min-height: inherit;
+  /* margin-left: 250px; */
 }
 
 .firstColumnContainer {
@@ -8,6 +9,11 @@
   overflow-y: auto;
   /* box-shadow: 0px 0px 9px 0px #ddd; */
   max-height: 100vh;
+  /* position: fixed;
+  top: 0;
+  left: 50px;
+  background: white;
+  z-index: 2; */
 }
 
 .secondColumnContainer {

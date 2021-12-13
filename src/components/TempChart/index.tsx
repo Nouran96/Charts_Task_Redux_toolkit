@@ -14,6 +14,7 @@ import { useAppSelector } from "../../types/Redux";
 import moment from "moment";
 import styles from "./styles.module.css";
 import { Box } from "@mui/system";
+import { getWeatherHistoryData } from "../../network/apiCalls";
 
 type HistoryWeatherResponse = {
   hourly: Array<{
@@ -27,6 +28,7 @@ const TempChart = () => {
     weather: { requestedParams },
     tree: { selectedNode },
   } = useAppSelector((state) => state);
+
   const [history, setHistory] = React.useState<{
     data: null | Array<HistoryWeatherResponse>;
     error: null | boolean;
@@ -57,32 +59,42 @@ const TempChart = () => {
   const getWeatherHistory = async () => {
     setHistory({ data: null, error: null, loading: true });
     try {
-      // Unix timestamp in seconds 24 hours before
-      const unixTimestampADayBefore =
-        requestedParams.dt && requestedParams.dt - 86400;
-      // Get weather by coordinates if present or by name
-      const dayBeforeResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${requestedParams.coord?.lat}&lon=${requestedParams.coord?.lon}&dt=${unixTimestampADayBefore}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`
-      );
+      if (requestedParams) {
+        // Unix timestamp in seconds 24 hours before
+        const unixTimestampADayBefore =
+          requestedParams.dt && requestedParams.dt - 86400;
 
-      const todayResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${requestedParams.coord?.lat}&lon=${requestedParams.coord?.lon}&dt=${requestedParams.dt}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`
-      );
+        const dayBeforeData =
+          requestedParams.coord &&
+          unixTimestampADayBefore &&
+          (await getWeatherHistoryData(
+            requestedParams.coord.lat,
+            requestedParams.coord.lon,
+            unixTimestampADayBefore
+          ));
 
-      const dayBeforeData = await dayBeforeResponse.json();
-      const todayData = await todayResponse.json();
-      if (
-        (dayBeforeData.cod && dayBeforeData.cod !== 200) ||
-        (todayData.cod && todayData.cod !== 200)
-      ) {
-        // Error happened
-        setHistory({ data: null, error: true, loading: false });
-      } else {
-        setHistory({
-          data: [dayBeforeData, todayData],
-          error: null,
-          loading: false,
-        });
+        const todayData =
+          requestedParams.coord &&
+          requestedParams.dt &&
+          (await getWeatherHistoryData(
+            requestedParams.coord.lat,
+            requestedParams.coord.lon,
+            requestedParams.dt
+          ));
+
+        if (
+          (dayBeforeData.cod && dayBeforeData.cod !== 200) ||
+          (todayData.cod && todayData.cod !== 200)
+        ) {
+          // Error happened
+          setHistory({ data: null, error: true, loading: false });
+        } else {
+          setHistory({
+            data: [dayBeforeData, todayData],
+            error: null,
+            loading: false,
+          });
+        }
       }
     } catch (err: any) {
       setHistory({ data: null, error: true, loading: false });

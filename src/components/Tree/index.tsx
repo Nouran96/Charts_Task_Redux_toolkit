@@ -2,8 +2,6 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import TreeView from "@mui/lab/TreeView";
 import { CircularProgress, SvgIcon, Typography } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { GET_CONTINENTS } from "../../utils/Queries";
 import CustomTreeItem from "../CustomTreeItem";
 import styles from "./styles.module.css";

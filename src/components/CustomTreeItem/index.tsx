@@ -147,6 +147,7 @@ const CustomContent = React.forwardRef(function CustomContent(
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     if (!expanded) {
+      // It has children
       if (type !== "City") {
         if (!data) getChildren();
         else {

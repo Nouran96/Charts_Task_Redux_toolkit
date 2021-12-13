@@ -4,6 +4,7 @@ import * as React from "react";
 import { useAppDispatch } from "../../types/Redux";
 import * as types from "../../store/actionTypes";
 import moment from "moment";
+import { getCurrentWeatherData } from "../../network/apiCalls";
 
 type CurrentWeatherProps = {
   data: {
@@ -52,15 +53,7 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
     if (data) {
       try {
         // Get weather by coordinates if present or by name
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?${
-            data?.location
-              ? `lat=${data?.location.latitude}&lon=${data?.location.longitude}`
-              : `q=${data?.name},${data?.code?.toLowerCase()}`
-          }&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`
-        );
-
-        const fetchedData = await response.json();
+        const fetchedData = await getCurrentWeatherData(data);
 
         if (fetchedData.cod !== 200) {
           // Error happened
