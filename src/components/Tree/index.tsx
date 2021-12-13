@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import TreeView from "@mui/lab/TreeView";
 import { CircularProgress, SvgIcon, Typography } from "@mui/material";
 import { GET_CONTINENTS } from "../../utils/Queries";
@@ -8,7 +8,11 @@ import styles from "./styles.module.css";
 import { getModifiedData, getNodeTypeFromID } from "../../utils/Shared";
 import { Box } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "../../types/Redux";
-import * as types from "../../store/actionTypes";
+import {
+  addExpandedNodes,
+  addSelectedNode,
+  addTreeData,
+} from "../../store/reducers/Tree";
 
 function MinusSquare(props: any) {
   return (
@@ -67,17 +71,11 @@ const Tree = () => {
   }, []);
 
   useEffect(() => {
-    dispatch({
-      type: types.ADD_EXPANDED_NODES,
-      payload: expanded,
-    });
+    dispatch(addExpandedNodes(expanded));
   }, [expanded]);
 
   useEffect(() => {
-    dispatch({
-      type: types.ADD_TREE_DATA,
-      payload: treeItemsData,
-    });
+    dispatch(addTreeData(treeItemsData));
   }, [treeItemsData]);
 
   // Remove collapsed children from main array for correct rendering of nodes
@@ -111,10 +109,9 @@ const Tree = () => {
 
   const handleSelect = (event: React.SyntheticEvent, nodeId: string) => {
     if (nodeId) {
-      dispatch({
-        type: types.ADD_SELECTED_NODES,
-        payload: { id: nodeId, type: getNodeTypeFromID(nodeId) },
-      });
+      dispatch(
+        addSelectedNode({ id: nodeId, type: getNodeTypeFromID(nodeId) })
+      );
     }
   };
 

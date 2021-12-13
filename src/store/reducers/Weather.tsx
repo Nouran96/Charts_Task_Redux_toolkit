@@ -1,5 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import * as types from "../actionTypes";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type RequestedParamsType = {
   dt: number | null;
@@ -13,21 +12,24 @@ type WeatherReducerState = {
   requestedParams: RequestedParamsType;
 };
 
-const INITIAL_STATE: WeatherReducerState = {
+const initialState: WeatherReducerState = {
   requestedParams: {
     dt: null,
     coord: null,
   },
 };
 
-export default function weatherReducer(
-  state = INITIAL_STATE,
-  action: PayloadAction<RequestedParamsType>
-) {
-  switch (action.type) {
-    case types.ADD_WEATHER_PARAMS:
-      return { ...state, requestedParams: action.payload };
-    default:
-      return state;
-  }
-}
+export const weatherSlice = createSlice({
+  name: "tree",
+  initialState,
+  reducers: {
+    addWeatherParams: (state, action: PayloadAction<RequestedParamsType>) => {
+      state.requestedParams = action.payload;
+    },
+  },
+});
+
+// Action creators are generated for each case reducer function
+export const { addWeatherParams } = weatherSlice.actions;
+
+export default weatherSlice.reducer;

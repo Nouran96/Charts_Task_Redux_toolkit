@@ -1,5 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import * as types from "../actionTypes";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type TreeReducerState = {
   selectedNode: {
@@ -17,7 +16,7 @@ type TreeReducerState = {
   };
 };
 
-const INITIAL_STATE: TreeReducerState = {
+const initialState: TreeReducerState = {
   selectedNode: {
     id: "",
     type: "",
@@ -31,22 +30,46 @@ const INITIAL_STATE: TreeReducerState = {
   },
 };
 
-export default function treeReducer(
-  state = INITIAL_STATE,
-  action: PayloadAction<any>
-) {
-  switch (action.type) {
-    case types.ADD_SELECTED_NODES:
-      return { ...state, selectedNode: action.payload };
-    case types.ADD_EXPANDED_NODES:
-      return { ...state, expandedNodes: action.payload };
-    case types.ADD_TREE_DATA:
-      return { ...state, treeData: action.payload };
-    case types.TOGGLE_TREE_DRAWER:
-      return { ...state, treeDrawerOpened: !state.treeDrawerOpened };
-    case types.ADD_HIGHEST_POPULATED_CITIES:
-      return { ...state, highestPopulatedCities: action.payload };
-    default:
-      return state;
-  }
-}
+export const treeSlice = createSlice({
+  name: "tree",
+  initialState,
+  reducers: {
+    addSelectedNode: (
+      state,
+      action: PayloadAction<{ id: string; type: string }>
+    ) => {
+      state.selectedNode = action.payload;
+    },
+    addExpandedNodes: (state, action: PayloadAction<Array<string>>) => {
+      state.expandedNodes = action.payload;
+    },
+    addTreeData: (state, action: PayloadAction<Array<any>>) => {
+      state.treeData = action.payload;
+    },
+    addHighestPopulatedCities: (
+      state,
+      action: PayloadAction<{
+        data: Array<{
+          node: { name: string; population: number; objectId: string };
+        }>;
+        loading: boolean;
+      }>
+    ) => {
+      state.highestPopulatedCities = action.payload;
+    },
+    toggleTreeDrawerState: (state) => {
+      state.treeDrawerOpened = !state.treeDrawerOpened;
+    },
+  },
+});
+
+// Action creators are generated for each case reducer function
+export const {
+  addSelectedNode,
+  addExpandedNodes,
+  addTreeData,
+  addHighestPopulatedCities,
+  toggleTreeDrawerState,
+} = treeSlice.actions;
+
+export default treeSlice.reducer;

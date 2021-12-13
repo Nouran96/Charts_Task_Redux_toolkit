@@ -17,7 +17,7 @@ import logo from "../../assets/images/logo.png";
 import styles from "./styles.module.css";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppDispatch } from "../../types/Redux";
-import { TOGGLE_TREE_DRAWER } from "../../store/actionTypes";
+import { toggleTreeDrawerState } from "../../store/reducers/Tree";
 
 const SideDrawer = () => {
   const mobileSize = useMediaQuery("(max-width: 650px)");
@@ -25,10 +25,7 @@ const SideDrawer = () => {
   const location = useLocation();
 
   const toggleTreeDrawer = () => {
-    dispatch({
-      type: TOGGLE_TREE_DRAWER,
-      payload: null,
-    });
+    dispatch(toggleTreeDrawerState());
   };
 
   return (

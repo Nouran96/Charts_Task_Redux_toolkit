@@ -2,9 +2,9 @@ import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
 import { useAppDispatch } from "../../types/Redux";
-import * as types from "../../store/actionTypes";
 import moment from "moment";
 import { getCurrentWeatherData } from "../../network/apiCalls";
+import { addWeatherParams } from "../../store/reducers/Weather";
 
 type CurrentWeatherProps = {
   data: {
@@ -42,10 +42,7 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
     getCurrentWeather();
 
     return () => {
-      dispatch({
-        type: types.ADD_WEATHER_PARAMS,
-        payload: { dt: null, coord: null },
-      });
+      dispatch(addWeatherParams({ dt: null, coord: null }));
     };
   }, [data]);
 
@@ -60,10 +57,9 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
           setWeather({ data: null, error: true });
         } else {
           setWeather({ data: fetchedData, error: null });
-          dispatch({
-            type: types.ADD_WEATHER_PARAMS,
-            payload: { dt: fetchedData.dt, coord: fetchedData.coord },
-          });
+          dispatch(
+            addWeatherParams({ dt: fetchedData.dt, coord: fetchedData.coord })
+          );
         }
       } catch (err: any) {
         console.error(err);

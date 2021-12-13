@@ -14,9 +14,9 @@ import styles from "./styles.module.css";
 import { getNodeId } from "../../utils/Shared";
 import { useAppDispatch } from "../../types/Redux";
 import {
-  ADD_HIGHEST_POPULATED_CITIES,
-  ADD_SELECTED_NODES,
-} from "../../store/actionTypes";
+  addHighestPopulatedCities,
+  addSelectedNode,
+} from "../../store/reducers/Tree";
 
 const CustomContent = React.forwardRef(function CustomContent(
   props: CustomTreeItemContentProps,
@@ -100,33 +100,30 @@ const CustomContent = React.forwardRef(function CustomContent(
 
       // Add first 10 highest populated cities for scatter chart
       if (type === "Country") {
-        dispatch({
-          type: ADD_HIGHEST_POPULATED_CITIES,
-          payload: {
+        dispatch(
+          addHighestPopulatedCities({
             data: [],
             loading: true,
-          },
-        });
+          })
+        );
 
-        dispatch({
-          type: ADD_HIGHEST_POPULATED_CITIES,
-          payload: {
+        dispatch(
+          addHighestPopulatedCities({
             data: fetchedData.data.results.slice(0, 10),
             loading: false,
-          },
-        });
+          })
+        );
       }
     } else if (
       fetchedData?.data?.results &&
       fetchedData.data.results.length === 0
     ) {
-      dispatch({
-        type: ADD_HIGHEST_POPULATED_CITIES,
-        payload: {
+      dispatch(
+        addHighestPopulatedCities({
           data: [],
           loading: false,
-        },
-      });
+        })
+      );
     }
   }, [fetchedData]);
 
@@ -164,10 +161,7 @@ const CustomContent = React.forwardRef(function CustomContent(
 
     if (expanded && removeCollapsedChildren) {
       removeCollapsedChildren(nodeId);
-      dispatch({
-        type: ADD_SELECTED_NODES,
-        payload: { id: "", type: "" },
-      });
+      dispatch(addSelectedNode({ id: "", type: "" }));
     }
 
     if (type !== "City") {

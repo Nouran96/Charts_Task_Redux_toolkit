@@ -1,22 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
-import {
-  Box,
-  CardHeader,
-  Card,
-  Typography,
-  CardContent,
-  Drawer,
-  useMediaQuery,
-} from "@mui/material";
-import Tree from "../components/Tree";
+import { Box, Drawer, useMediaQuery } from "@mui/material";
 import CustomAppBar from "../components/CustomAppBar";
 import NodeDetails from "../components/NodeDetails";
 import styles from "./styles.module.css";
 import TempChart from "../components/TempChart";
 import WorldTree from "../components/WorldTree";
 import { useAppDispatch, useAppSelector } from "../types/Redux";
-import { TOGGLE_TREE_DRAWER } from "../store/actionTypes";
+import { toggleTreeDrawerState } from "../store/reducers/Tree";
 
 const ConditionalWrapper = ({
   condition,
@@ -39,7 +30,6 @@ const Monitor = () => {
   const { treeDrawerOpened } = useAppSelector((state) => state.tree);
   const dispatch = useAppDispatch();
   const [title, setTitle] = useState("");
-  // const [worldDrawerOpen, setWorldDrawerOpen] = useState(true);
 
   useEffect(() => {
     const title = pathname.split("/").join("");
@@ -55,10 +45,7 @@ const Monitor = () => {
       return;
     }
 
-    dispatch({
-      type: TOGGLE_TREE_DRAWER,
-      payload: null,
-    });
+    dispatch(toggleTreeDrawerState());
   };
 
   return (
