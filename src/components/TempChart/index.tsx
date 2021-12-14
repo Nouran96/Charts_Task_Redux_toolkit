@@ -14,7 +14,7 @@ import { useAppSelector } from "../../types/Redux";
 import moment from "moment";
 import styles from "./styles.module.css";
 import { Box } from "@mui/system";
-import { getWeatherHistoryData } from "../../network/apiCalls";
+import { useLazyGetWeatherHistoryQuery } from "../../store/apis/weatherApi";
 
 type HistoryWeatherResponse = {
   hourly: Array<{
@@ -35,6 +35,9 @@ const TempChart = () => {
     loading: boolean;
   }>({ data: null, error: null, loading: false });
 
+  const [callWeatherHistoryApi, { data, error, isFetching }] =
+    useLazyGetWeatherHistoryQuery();
+
   const [lineChartData, setLineChartData] = React.useState<Array<{
     dt: number;
     temp: number;
@@ -42,12 +45,39 @@ const TempChart = () => {
 
   React.useEffect(() => {
     if (requestedParams.dt) {
-      getWeatherHistory();
+      const unixTimestampADayBefore =
+        requestedParams.dt && requestedParams.dt - 86400;
+
+      callWeatherHistoryApi({
+        lat: requestedParams.coord?.lat || 0,
+        lon: requestedParams.coord?.lon || 0,
+        dt: unixTimestampADayBefore,
+      });
     }
   }, [requestedParams]);
 
   React.useEffect(() => {
-    if (history.data) getChartData();
+    if (data) {
+      if (!history.data) {
+        callWeatherHistoryApi({
+          lat: requestedParams.coord?.lat || 0,
+          lon: requestedParams.coord?.lon || 0,
+          dt: requestedParams.dt || 0,
+        });
+
+        setHistory({ data: [data], error: null, loading: false });
+      } else {
+        setHistory({
+          data: [...history.data, data],
+          error: null,
+          loading: false,
+        });
+      }
+    }
+  }, [data]);
+
+  React.useEffect(() => {
+    if (history.data?.length === 2) getChartData();
   }, [history]);
 
   React.useEffect(() => {
@@ -55,51 +85,6 @@ const TempChart = () => {
 
     setHistory({ data: null, error: null, loading: false });
   }, [selectedNode]);
-
-  const getWeatherHistory = async () => {
-    setHistory({ data: null, error: null, loading: true });
-    try {
-      if (requestedParams) {
-        // Unix timestamp in seconds 24 hours before
-        const unixTimestampADayBefore =
-          requestedParams.dt && requestedParams.dt - 86400;
-
-        const dayBeforeData =
-          requestedParams.coord &&
-          unixTimestampADayBefore &&
-          (await getWeatherHistoryData(
-            requestedParams.coord.lat,
-            requestedParams.coord.lon,
-            unixTimestampADayBefore
-          ));
-
-        const todayData =
-          requestedParams.coord &&
-          requestedParams.dt &&
-          (await getWeatherHistoryData(
-            requestedParams.coord.lat,
-            requestedParams.coord.lon,
-            requestedParams.dt
-          ));
-
-        if (
-          (dayBeforeData.cod && dayBeforeData.cod !== 200) ||
-          (todayData.cod && todayData.cod !== 200)
-        ) {
-          // Error happened
-          setHistory({ data: null, error: true, loading: false });
-        } else {
-          setHistory({
-            data: [dayBeforeData, todayData],
-            error: null,
-            loading: false,
-          });
-        }
-      }
-    } catch (err: any) {
-      setHistory({ data: null, error: true, loading: false });
-    }
-  };
 
   const getChartData = () => {
     if (requestedParams.dt && history.data) {
@@ -159,15 +144,15 @@ const TempChart = () => {
         </Card>
 
         <AccordionDetails>
-          {history.loading ? (
+          {isFetching ? (
             <Box display="flex" justifyContent="center" mt={10}>
               <CircularProgress />
             </Box>
-          ) : history.error ? (
+          ) : error ? (
             <Typography textAlign="center" className="error">
               Error fetching weather history
             </Typography>
-          ) : lineChartData ? (
+          ) : lineChartData || history?.data?.length === 2 ? (
             <>
               <LineChart data={lineChartData} />
             </>

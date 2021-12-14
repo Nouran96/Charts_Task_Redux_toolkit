@@ -3,8 +3,8 @@ import { Box } from "@mui/system";
 import * as React from "react";
 import { useAppDispatch } from "../../types/Redux";
 import moment from "moment";
-import { getCurrentWeatherData } from "../../network/apiCalls";
 import { addWeatherParams } from "../../store/reducers/Weather";
+import { useLazyGetCurrentWeatherQuery } from "../../store/apis/weatherApi";
 
 type CurrentWeatherProps = {
   data: {
@@ -14,58 +14,27 @@ type CurrentWeatherProps = {
   };
 };
 
-type CurrentWeatherResponse = {
-  main: {
-    temp: number;
-    temp_max: number;
-    temp_min: number;
-    feels_like: number;
-  };
-  weather: Array<{ icon: string; description: string }>;
-  coord: {
-    lon: number;
-    lat: number;
-  };
-  dt: number;
-};
-
 const CurrentWeather = ({ data }: CurrentWeatherProps) => {
-  const [weather, setWeather] = React.useState<{
-    data: null | CurrentWeatherResponse;
-    error: null | boolean;
-  }>({ data: null, error: null });
+  const [callGetCurrentWeather, { data: fetchedData, error, isLoading }] =
+    useLazyGetCurrentWeatherQuery();
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    setWeather({ data: null, error: null });
-    getCurrentWeather();
+    callGetCurrentWeather(data);
 
     return () => {
       dispatch(addWeatherParams({ dt: null, coord: null }));
     };
   }, [data]);
 
-  const getCurrentWeather = async () => {
-    if (data) {
-      try {
-        // Get weather by coordinates if present or by name
-        const fetchedData = await getCurrentWeatherData(data);
-
-        if (fetchedData.cod !== 200) {
-          // Error happened
-          setWeather({ data: null, error: true });
-        } else {
-          setWeather({ data: fetchedData, error: null });
-          dispatch(
-            addWeatherParams({ dt: fetchedData.dt, coord: fetchedData.coord })
-          );
-        }
-      } catch (err: any) {
-        console.error(err);
-      }
+  React.useEffect(() => {
+    if (fetchedData) {
+      dispatch(
+        addWeatherParams({ dt: fetchedData.dt, coord: fetchedData.coord })
+      );
     }
-  };
+  }, [fetchedData]);
 
   const capitalizeText = (text: string): string => {
     return text
@@ -75,50 +44,49 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
   };
 
   const renderWeatherData = () => {
-    const { data } = weather;
     return (
       <Box display="flex" flexDirection="column" alignItems="center">
-        {data?.dt && (
+        {fetchedData?.dt && (
           <Typography variant="caption" mb={2} fontSize={16} fontWeight="bold">
-            {moment.unix(data.dt).format("D MMMM, dddd")}
+            {moment.unix(fetchedData.dt).format("D MMMM, dddd")}
           </Typography>
         )}
         <Box display="flex" gap={1} alignItems="center">
           <img
-            src={`http://openweathermap.org/img/w/${data?.weather[0].icon}.png`}
+            src={`http://openweathermap.org/img/w/${fetchedData?.weather[0].icon}.png`}
             alt="weather_icon"
             width="75"
           />
           <Box>
-            {data?.main?.temp && (
+            {fetchedData?.main?.temp && (
               <Typography variant="h4" textAlign="center">
-                {Math.round(data?.main?.temp)}°
+                {Math.round(fetchedData?.main?.temp)}°
               </Typography>
             )}
 
-            {data?.main?.feels_like && (
+            {fetchedData?.main?.feels_like && (
               <Typography variant="subtitle2">
-                Feels like {Math.round(data?.main?.feels_like)}°
+                Feels like {Math.round(fetchedData?.main?.feels_like)}°
               </Typography>
             )}
           </Box>
         </Box>
 
         <Box display="flex" alignItems="baseline" mt={2} gap={2}>
-          {data?.weather[0].description && (
+          {fetchedData?.weather[0].description && (
             <Typography variant="body1">
-              {capitalizeText(data?.weather[0].description)}
+              {capitalizeText(fetchedData?.weather[0].description)}
             </Typography>
           )}
 
-          {data?.main?.temp_max && data?.main?.temp_min && (
+          {fetchedData?.main?.temp_max && fetchedData?.main?.temp_min && (
             <Box display="flex" alignItems="end">
               <Typography variant="h6">
-                {Math.round(data?.main?.temp_max)}°
+                {Math.round(fetchedData?.main?.temp_max)}°
               </Typography>
 
               <Typography variant="subtitle2">
-                / {Math.round(data?.main?.temp_min)}°
+                / {Math.round(fetchedData?.main?.temp_min)}°
               </Typography>
             </Box>
           )}
@@ -137,14 +105,10 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
     >
       <CardContent>
         <Box display="flex" justifyContent="center" mb={2} color="white">
-          {!weather.data && !weather.error && (
-            <CircularProgress color="inherit" />
-          )}
-          {weather.error && (
-            <Typography>Error to fetch weather data</Typography>
-          )}
-          {weather.data &&
-            Object.keys(weather.data).length > 0 &&
+          {isLoading && <CircularProgress color="inherit" />}
+          {error && <Typography>Error to fetch weather data</Typography>}
+          {fetchedData &&
+            Object.keys(fetchedData).length > 0 &&
             renderWeatherData()}
         </Box>
       </CardContent>
