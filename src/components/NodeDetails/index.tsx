@@ -253,9 +253,9 @@ const NodeDetails = () => {
             <CurrentWeather data={details.data} />
           </Box>
           {selectedNode.type === "Country" &&
-            (highestPopulatedCities.data.length > 0 ? (
+            (highestPopulatedCities?.data ? (
               <ScatterChart data={highestPopulatedCities.data} />
-            ) : highestPopulatedCities.loading ? (
+            ) : highestPopulatedCities?.loading ? (
               renderLoader()
             ) : null)}
         </Box>
