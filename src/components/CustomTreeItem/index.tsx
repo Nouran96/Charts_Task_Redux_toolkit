@@ -179,6 +179,7 @@ const CustomContent = React.forwardRef(function CustomContent(
         [classes.disabled]: disabled,
       })}
       onClick={handleExpansionClick}
+      data-testid={nodeId}
       ref={ref as React.Ref<HTMLDivElement>}
     >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}

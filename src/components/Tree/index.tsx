@@ -62,6 +62,10 @@ const Tree = () => {
       getContinents();
     }
 
+    return () => {
+      dispatch(addTreeData([]));
+    };
+
     // return () => {
     //   dispatch({
     //     type: types.ADD_SELECTED_NODES,
@@ -157,7 +161,7 @@ const Tree = () => {
           (node.children.count > 0 ? (
             <CustomTreeItem nodeId="1" />
           ) : (
-            node.children.length &&
+            node.children.length > 0 &&
             node.children.map((child: any) =>
               renderChild(child.node, level + 1)
             )
