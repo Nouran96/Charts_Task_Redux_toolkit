@@ -52,11 +52,13 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
           </Typography>
         )}
         <Box display="flex" gap={1} alignItems="center">
-          <img
-            src={`http://openweathermap.org/img/w/${fetchedData?.weather[0].icon}.png`}
-            alt="weather_icon"
-            width="75"
-          />
+          {Array.isArray(fetchedData?.weather) && (
+            <img
+              src={`http://openweathermap.org/img/w/${fetchedData?.weather[0].icon}.png`}
+              alt="weather_icon"
+              width="75"
+            />
+          )}
           <Box>
             {fetchedData?.main?.temp && (
               <Typography variant="h4" textAlign="center">
@@ -73,11 +75,12 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
         </Box>
 
         <Box display="flex" alignItems="baseline" mt={2} gap={2}>
-          {fetchedData?.weather[0].description && (
-            <Typography variant="body1">
-              {capitalizeText(fetchedData?.weather[0].description)}
-            </Typography>
-          )}
+          {Array.isArray(fetchedData?.weather) &&
+            fetchedData?.weather[0].description && (
+              <Typography variant="body1">
+                {capitalizeText(fetchedData?.weather[0].description)}
+              </Typography>
+            )}
 
           {fetchedData?.main?.temp_max && fetchedData?.main?.temp_min && (
             <Box display="flex" alignItems="end">

@@ -57,6 +57,7 @@
     ]
   },
   "devDependencies": {
-    "@types/parse": "^2.18.13"
+    "@types/parse": "^2.18.13",
+    "msw": "^0.36.3"
   }
 }

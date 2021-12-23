@@ -1,4 +1,3 @@
-import { queryByText, waitFor } from "@testing-library/react";
 import NodeDetails from "..";
 import {
   render,
@@ -6,18 +5,6 @@ import {
   cleanup,
   waitForElementToBeRemoved,
 } from "../../../test-utils";
-
-// jest.mock("react-apexcharts", () => ({
-//   Chart: () => null,
-// }));
-
-window.ResizeObserver =
-  window.ResizeObserver ||
-  jest.fn().mockImplementation(() => ({
-    disconnect: jest.fn(),
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-  }));
 
 afterEach(() => {
   cleanup();
