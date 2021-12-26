@@ -4,7 +4,17 @@ import {
   screen,
   cleanup,
   waitForElementToBeRemoved,
+  waitFor,
 } from "../../../test-utils";
+
+jest.mock("../../ScatterChart", () => {
+  return {
+    __esModule: true,
+    default: () => {
+      return <div data-testid="scatterChart"></div>;
+    },
+  };
+});
 
 afterEach(() => {
   cleanup();
@@ -62,9 +72,15 @@ describe("Node details Component", () => {
 
     // wait until loading finishes
     await waitForElementToBeRemoved(() => screen.queryByRole("progressbar"));
-    const chart = document.querySelector("#chart");
 
-    expect(chart).toBeTruthy();
+    const scatterChart = await waitFor(() =>
+      screen.getByTestId("scatterChart")
+    );
+
+    expect(scatterChart).toBeInTheDocument();
+    // const chart = document.querySelector("#chart");
+
+    // expect(chart).toBeTruthy();
   });
 
   it("doesn't render scatter chart if city", async () => {
@@ -82,8 +98,14 @@ describe("Node details Component", () => {
 
     // wait until loading finishes
     await waitForElementToBeRemoved(() => screen.queryByRole("progressbar"));
-    const chart = document.querySelector("#chart");
 
-    expect(chart).not.toBeTruthy();
+    const scatterChart = await waitFor(() =>
+      screen.queryByTestId("scatterChart")
+    );
+
+    expect(scatterChart).not.toBeInTheDocument();
+    // const chart = document.querySelector("#chart");
+
+    // expect(chart).not.toBeTruthy();
   });
 });
