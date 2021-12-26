@@ -35,7 +35,7 @@ const TempChart = () => {
     loading: boolean;
   }>({ data: null, error: null, loading: false });
 
-  const [callWeatherHistoryApi, { data, error, isFetching }] =
+  const [callWeatherHistoryApi, { data, isError, isFetching }] =
     useLazyGetWeatherHistoryQuery();
 
   const [lineChartData, setLineChartData] = React.useState<Array<{
@@ -148,7 +148,7 @@ const TempChart = () => {
             <Box display="flex" justifyContent="center" mt={10}>
               <CircularProgress />
             </Box>
-          ) : error ? (
+          ) : isError ? (
             <Typography textAlign="center" className="error">
               Error fetching weather history
             </Typography>

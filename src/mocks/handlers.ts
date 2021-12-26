@@ -1,7 +1,7 @@
 import { rest } from "msw";
 
 export const handlers = [
-  // Handles a GET /user request
+  // Handles a GET to current weather api
   rest.get(
     `https://api.openweathermap.org/data/2.5/weather`,
     (req, res, ctx) => {
@@ -21,6 +21,115 @@ export const handlers = [
               },
             },
           },
+        })
+      );
+    }
+  ),
+  // Handles a GET to history weather api
+  rest.get(
+    `https://api.openweathermap.org/data/2.5/onecall/timemachine`,
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          hourly: [
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+            {
+              dt: 1640390400,
+              temp: 9.14,
+            },
+          ],
         })
       );
     }

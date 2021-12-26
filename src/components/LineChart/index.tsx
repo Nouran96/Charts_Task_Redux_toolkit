@@ -123,7 +123,7 @@ const LineChart = ({ data }: LineChartProps) => {
   };
 
   return (
-    <div id="chart">
+    <div id="chart" data-testid="lineChart">
       {chartOptions.options && (
         <Chart
           options={chartOptions.options}
